@@ -1,5 +1,6 @@
 import { Button } from "@nextui-org/button";
 import { Chip } from "@nextui-org/chip";
+import { Spinner } from "@nextui-org/spinner";
 import {
   Dropdown,
   DropdownTrigger,
@@ -40,18 +41,22 @@ export const columns: Column[] = [
 
 interface TableChipProps {
   isFound: boolean;
+  isLoading: boolean;
 }
 
-export const TableChip = ({ isFound }: TableChipProps) => (
-  <Chip
-    className="capitalize border-none gap-1 text-default-600"
-    color={isFound ? "success" : "danger"}
-    size="sm"
-    variant="dot"
-  >
-    {isFound ? "Found" : "Not Found"}
-  </Chip>
-);
+export const TableChip = ({ isFound, isLoading }: TableChipProps) =>
+  isLoading ? (
+    <Spinner color="success" size="sm" />
+  ) : (
+    <Chip
+      className="capitalize border-none gap-1 text-default-600"
+      color={isFound ? "success" : "danger"}
+      size="sm"
+      variant="dot"
+    >
+      {isFound ? "Found" : "Not Found"}
+    </Chip>
+  );
 
 interface TableDropdown extends Pick<Company, "careerPage" | "website"> {}
 

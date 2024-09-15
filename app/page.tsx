@@ -14,7 +14,7 @@ export default function Home() {
   const isScanningJobs = useQuery(api.settings.getIsScanningJobs);
 
   const updateCompany = useMutation(api.companies.update);
-  const setIscanningCompany = useMutation(api.companies.setIsScanningCompany);
+  const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
   const setIsScanningJobs = useMutation(api.settings.setIsScanningJobs);
 
   const handleButtonClick = async () => {
@@ -22,7 +22,7 @@ export default function Home() {
 
     if (companies && jobTitles?.length) {
       for (const company of companies) {
-        setIscanningCompany({ id: company._id, state: true });
+        setIsScanningCompany({ id: company._id, state: true });
       }
 
       for (const company of companies) {
@@ -41,7 +41,7 @@ export default function Home() {
         } catch (error) {
           console.log(error);
         } finally {
-          setIscanningCompany({ id: company._id, state: false });
+          setIsScanningCompany({ id: company._id, state: false });
         }
       }
     }

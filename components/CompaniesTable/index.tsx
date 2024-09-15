@@ -10,6 +10,7 @@ import { Spinner } from "@nextui-org/spinner";
 import { Key, useCallback } from "react";
 
 import { columns, TableChip, TableDropdown, TableEmptyState } from "./elements";
+import { TableNameCell } from "./TableNameCell";
 
 import { Company } from "@/types";
 
@@ -21,7 +22,6 @@ export const CompaniesTable = ({ companies }: CompaniesTableProps) => {
   const renderCell = useCallback((company: Company, columnKey: Key) => {
     const {
       careerPage,
-      name,
       isJobFound,
       isScanningJob,
       isKeywordFound,
@@ -31,7 +31,7 @@ export const CompaniesTable = ({ companies }: CompaniesTableProps) => {
 
     switch (columnKey) {
       case "name":
-        return name;
+        return <TableNameCell company={company} />;
       case "isKeywordFound":
         return (
           <TableChip isFound={isKeywordFound} isLoading={isScanningKeyword} />

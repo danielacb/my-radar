@@ -8,7 +8,7 @@ import {
   DropdownItem,
 } from "@nextui-org/dropdown";
 
-import { ExternalLink, VerticalDotsIcon } from "@/components/icons";
+import { ExternalLinkIcon, VerticalDotsIcon } from "@/components/icons";
 import { Company } from "@/types";
 
 interface Column {
@@ -70,14 +70,14 @@ export const TableDropdown = ({ website, careerPage }: TableDropdown) => (
       </DropdownTrigger>
       <DropdownMenu>
         <DropdownItem
-          endContent={<ExternalLink size={18} />}
+          endContent={<ExternalLinkIcon size={18} />}
           href={website}
           target="_blank"
         >
           Visit website
         </DropdownItem>
         <DropdownItem
-          endContent={<ExternalLink size={18} />}
+          endContent={<ExternalLinkIcon size={18} />}
           href={careerPage}
           target="_blank"
         >

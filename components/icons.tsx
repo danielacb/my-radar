@@ -237,7 +237,7 @@ export const VerticalDotsIcon = ({
   </svg>
 );
 
-export const ExternalLink = ({
+export const ExternalLinkIcon = ({
   size = 24,
   width,
   height,
@@ -259,5 +259,29 @@ export const ExternalLink = ({
     <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
     <path d="M15 3h6v6" />
     <path d="M10 14L21 3" />
+  </svg>
+);
+
+export const PlayIcon = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}: IconSvgProps) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height={size || height}
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth="1.5"
+    viewBox="0 0 24 24"
+    width={size || width}
+    {...props}
+  >
+    <path d="M9 22H15C20 22 22 20 22 15V9C22 4 20 2 15 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22Z" />
+    <path d="M10.74 15.53L14.26 12L10.74 8.46997" />
   </svg>
 );

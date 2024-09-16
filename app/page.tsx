@@ -7,6 +7,7 @@ import { areKeywordsOnPage } from "./helpers";
 
 import { api } from "@/convex/_generated/api";
 import { CompaniesTable } from "@/components/CompaniesTable";
+import AddNewCompanyModal from "@/components/AddNewCompanyModal";
 
 export default function Home() {
   const companies = useQuery(api.companies.get);
@@ -60,6 +61,11 @@ export default function Home() {
       >
         {`${isScanningJobs ? "Scanning" : "Scan"} for Jobs`}
       </Button>
+
+      <div className="w-full flex pt-12 justify-between">
+        <AddNewCompanyModal />
+        <Button variant="bordered">Settings</Button>
+      </div>
 
       <CompaniesTable companies={companies} />
     </section>

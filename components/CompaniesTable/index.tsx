@@ -69,7 +69,7 @@ export const CompaniesTable = ({ companies }: CompaniesTableProps) => {
   }
 
   return (
-    <Table hideHeader aria-label="Example static collection table">
+    <Table hideHeader aria-label="Companies table loading">
       <TableHeader columns={[]}>
         <TableColumn>Company</TableColumn>
       </TableHeader>

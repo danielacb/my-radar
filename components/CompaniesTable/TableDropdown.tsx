@@ -6,6 +6,9 @@ import {
   DropdownItem,
 } from "@nextui-org/dropdown";
 import { useMutation } from "convex/react";
+import { useDisclosure } from "@nextui-org/modal";
+
+import CompanyModal from "../CompanyModal";
 
 import { ExternalLinkIcon, VerticalDotsIcon } from "@/components/icons";
 import { Company } from "@/types";
@@ -15,6 +18,8 @@ export const TableDropdown = ({ company }: { company: Company }) => {
   const { _id, careerPage, website } = company;
   const deleteCompany = useMutation(api.companies.deleteCompany);
 
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   return (
     <div className="relative flex justify-end items-center gap-2">
       <Dropdown>
@@ -23,8 +28,14 @@ export const TableDropdown = ({ company }: { company: Company }) => {
             <VerticalDotsIcon className="text-default-300" />
           </Button>
         </DropdownTrigger>
-        <DropdownMenu>
+        <DropdownMenu
+          onAction={(key) => {
+            if (key === "edit company") onOpen();
+            if (key === "delete company") deleteCompany({ id: _id });
+          }}
+        >
           <DropdownItem
+            key="website"
             endContent={<ExternalLinkIcon size={18} />}
             href={website}
             target="_blank"
@@ -32,22 +43,29 @@ export const TableDropdown = ({ company }: { company: Company }) => {
             Visit website
           </DropdownItem>
           <DropdownItem
+            key="career page"
             endContent={<ExternalLinkIcon size={18} />}
             href={careerPage}
             target="_blank"
           >
             Visit career page
           </DropdownItem>
-          <DropdownItem>Edit</DropdownItem>
+          <DropdownItem key="edit company">Edit</DropdownItem>
           <DropdownItem
+            key="delete company"
             className="text-danger"
             color="danger"
-            onClick={() => deleteCompany({ id: _id })}
           >
             Delete
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
+      <CompanyModal
+        company={company}
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onOpenChange={onOpenChange}
+      />
     </div>
   );
 };

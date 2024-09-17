@@ -6,20 +6,32 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  useDisclosure,
 } from "@nextui-org/modal";
 import { useMutation, useQuery } from "convex/react";
 import { FormEvent, useState } from "react";
 
 import { api } from "@/convex/_generated/api";
 import { areKeywordsOnPage } from "@/app/helpers";
+import { Company } from "@/types";
 
-export default function AddNewCompanyModal() {
+interface CompanyModalProps {
+  company?: Company;
+  isOpen: boolean;
+  onOpen: () => void;
+  onOpenChange: () => void;
+}
+
+export default function CompanyModal({
+  company,
+  isOpen,
+  onOpen,
+  onOpenChange,
+}: CompanyModalProps) {
   const [formData, setFormData] = useState({
-    name: "",
-    careerPage: "",
-    keyword: "",
-    website: "",
+    name: company?.name || "",
+    careerPage: company?.careerPage || "",
+    keyword: company?.keyword || "",
+    website: company?.website || "",
   });
   const { name, keyword, website, careerPage } = formData;
 
@@ -27,8 +39,6 @@ export default function AddNewCompanyModal() {
   const updateCompany = useMutation(api.companies.update);
   const createCompany = useMutation(api.companies.create);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
-
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleValueChange = (
     value: string,
@@ -40,38 +50,47 @@ export default function AddNewCompanyModal() {
     });
   };
 
+  const scanCompany = async (company: Company) => {
+    await setIsScanningCompany({ id: company._id, state: true });
+
+    try {
+      const isKeywordFound = await areKeywordsOnPage(company.careerPage, [
+        company.keyword,
+      ]);
+      const isJobFound = await areKeywordsOnPage(company.careerPage, jobTitles);
+
+      await updateCompany({
+        company: { ...company, isKeywordFound, isJobFound },
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsScanningCompany({ id: company._id, state: false });
+    }
+  };
+
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await createCompany({ name, keyword, careerPage, website }).then(
-      async (company) => {
-        await setIsScanningCompany({ id: company._id, state: true });
 
-        try {
-          const isKeywordFound = await areKeywordsOnPage(company.careerPage, [
-            company.keyword,
-          ]);
-          const isJobFound = await areKeywordsOnPage(
-            company.careerPage,
-            jobTitles,
-          );
-
-          await updateCompany({
-            company: { ...company, isKeywordFound, isJobFound },
-          });
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setIsScanningCompany({ id: company._id, state: false });
-        }
-      },
-    );
+    if (company) {
+      await updateCompany({ company: { ...company, ...formData } });
+      await scanCompany({ ...company, ...formData });
+    } else {
+      await createCompany({ name, keyword, careerPage, website }).then(
+        async (company) => {
+          await scanCompany(company);
+        },
+      );
+    }
   };
 
   return (
     <>
-      <Button variant="flat" onPress={onOpen}>
-        Add company
-      </Button>
+      {!company && (
+        <Button variant="flat" onPress={onOpen}>
+          Add company
+        </Button>
+      )}
 
       <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
         <ModalContent>
@@ -133,7 +152,7 @@ export default function AddNewCompanyModal() {
                     Close
                   </Button>
                   <Button color="success" type="submit" onPress={onClose}>
-                    Add
+                    {company ? "Save" : "Add"}
                   </Button>
                 </ModalFooter>
               </form>

@@ -2,12 +2,13 @@
 
 import { useMutation, useQuery } from "convex/react";
 import { Button } from "@nextui-org/button";
+import { useDisclosure } from "@nextui-org/modal";
 
 import { areKeywordsOnPage } from "./helpers";
 
 import { api } from "@/convex/_generated/api";
 import { CompaniesTable } from "@/components/CompaniesTable";
-import AddNewCompanyModal from "@/components/AddNewCompanyModal";
+import CompanyModal from "@/components/CompanyModal";
 
 export default function Home() {
   const companies = useQuery(api.companies.get);
@@ -17,6 +18,8 @@ export default function Home() {
   const updateCompany = useMutation(api.companies.update);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
   const setIsScanningJobs = useMutation(api.settings.setIsScanningJobs);
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const handleButtonClick = async () => {
     setIsScanningJobs({ state: true });
@@ -63,7 +66,11 @@ export default function Home() {
       </Button>
 
       <div className="w-full flex pt-12 justify-between">
-        <AddNewCompanyModal />
+        <CompanyModal
+          isOpen={isOpen}
+          onOpen={onOpen}
+          onOpenChange={onOpenChange}
+        />
         <Button variant="bordered">Settings</Button>
       </div>
 

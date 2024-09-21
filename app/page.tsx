@@ -9,6 +9,7 @@ import { areKeywordsOnPage } from "./helpers";
 import { api } from "@/convex/_generated/api";
 import { CompaniesTable } from "@/components/CompaniesTable";
 import CompanyModal from "@/components/CompanyModal";
+import SettingsModal from "@/components/SettingsModal";
 
 export default function Home() {
   const companies = useQuery(api.companies.get);
@@ -55,8 +56,9 @@ export default function Home() {
 
   return (
     <section className="flex flex-col items-center justify-center gap-4">
+      <h1 className="text-4xl font-bold mb-8">My jobs Radar</h1>
       <Button
-        className="bg-gradient-to-tr from-cyan-500 to-green-500 text-white shadow-lg"
+        className="bg-gradient-to-br text-white from-cyan-500 to-green-500 border-small border-white/50 shadow-green-200/30 shadow-lg"
         disabled={!jobTitles?.length}
         isLoading={isScanningJobs}
         radius="full"
@@ -71,7 +73,7 @@ export default function Home() {
           onOpen={onOpen}
           onOpenChange={onOpenChange}
         />
-        <Button variant="bordered">Settings</Button>
+        <SettingsModal />
       </div>
 
       <CompaniesTable companies={companies} />

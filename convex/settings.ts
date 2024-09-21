@@ -31,3 +31,13 @@ export const setIsScanningJobs = mutation({
     });
   },
 });
+
+export const updateJobTitles = mutation({
+  args: { jobTitles: v.array(v.string()) },
+  handler: async (ctx, { jobTitles }) => {
+    const settings = await ctx.db.query("settings").collect();
+    const id = settings[0]._id;
+
+    await ctx.db.patch(id, { jobTitles });
+  },
+});

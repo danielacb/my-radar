@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import { VisuallyHidden } from "@react-aria/visually-hidden";
-import { SwitchProps, useSwitch } from "@nextui-org/switch";
+import { Switch, SwitchProps, useSwitch } from "@nextui-org/switch";
 import { useTheme } from "next-themes";
 import { useIsSSR } from "@react-aria/ssr";
 import clsx from "clsx";
@@ -70,11 +70,14 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
           ),
         })}
       >
-        {!isSelected || isSSR ? (
-          <SunFilledIcon size={22} />
-        ) : (
-          <MoonFilledIcon size={22} />
-        )}
+        <Switch
+          color="success"
+          endContent={<MoonFilledIcon size={20} />}
+          isSelected={isSelected}
+          size="lg"
+          startContent={<SunFilledIcon fill="white" size={20} />}
+          onChange={onChange}
+        />
       </div>
     </Component>
   );

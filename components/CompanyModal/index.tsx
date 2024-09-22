@@ -11,8 +11,8 @@ import { useMutation, useQuery } from "convex/react";
 import { FormEvent, useState } from "react";
 
 import { api } from "@/convex/_generated/api";
-import { areKeywordsOnPage } from "@/app/helpers";
 import { Company } from "@/types";
+import { scanCompany } from "@/app/helpers";
 
 interface CompanyModalProps {
   company?: Company;
@@ -35,7 +35,7 @@ export default function CompanyModal({
   });
   const { name, keyword, website, careerPage } = formData;
 
-  const jobTitles = useQuery(api.settings.getJobTitles);
+  const jobTitles = useQuery(api.settings.getJobTitles) || [];
   const companies = useQuery(api.companies.get);
   const updateCompany = useMutation(api.companies.update);
   const createCompany = useMutation(api.companies.create);
@@ -51,35 +51,25 @@ export default function CompanyModal({
     });
   };
 
-  const scanCompany = async (company: Company) => {
-    await setIsScanningCompany({ id: company._id, state: true });
-
-    try {
-      const isKeywordFound = await areKeywordsOnPage(company.careerPage, [
-        company.keyword,
-      ]);
-      const isJobFound = await areKeywordsOnPage(company.careerPage, jobTitles);
-
-      await updateCompany({
-        company: { ...company, isKeywordFound, isJobFound },
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsScanningCompany({ id: company._id, state: false });
-    }
-  };
-
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (company) {
-      await updateCompany({ company: { ...company, ...formData } });
-      await scanCompany({ ...company, ...formData });
+      await scanCompany({
+        company: { ...company, ...formData },
+        jobTitles,
+        setIsScanningCompany,
+        updateCompany,
+      });
     } else {
       await createCompany({ name, keyword, careerPage, website }).then(
         async (company) => {
-          await scanCompany(company);
+          await scanCompany({
+            company,
+            jobTitles,
+            setIsScanningCompany,
+            updateCompany,
+          });
         },
       );
     }

@@ -4,30 +4,15 @@ import { useMutation, useQuery } from "convex/react";
 import { PlayIcon } from "@/components/icons";
 import { api } from "@/convex/_generated/api";
 import { Company } from "@/types";
-import { areKeywordsOnPage } from "@/app/helpers";
+import { scanCompany } from "@/app/helpers";
 
 export const TableNameCell = ({ company }: { company: Company }) => {
-  const jobTitles = useQuery(api.settings.getJobTitles);
+  const jobTitles = useQuery(api.settings.getJobTitles) || [];
   const updateCompany = useMutation(api.companies.update);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
 
   const handleButtonClick = async () => {
-    setIsScanningCompany({ id: company._id, state: true });
-
-    try {
-      const isKeywordFound = await areKeywordsOnPage(company.careerPage, [
-        company.keyword,
-      ]);
-      const isJobFound = await areKeywordsOnPage(company.careerPage, jobTitles);
-
-      await updateCompany({
-        company: { ...company, isKeywordFound, isJobFound },
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsScanningCompany({ id: company._id, state: false });
-    }
+    scanCompany({ company, jobTitles, setIsScanningCompany, updateCompany });
   };
 
   return (

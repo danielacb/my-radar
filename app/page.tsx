@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "convex/react";
 import { Button } from "@nextui-org/button";
 import { useDisclosure } from "@nextui-org/modal";
 
-import { areKeywordsOnPage } from "./helpers";
+import { scanCompany } from "./helpers";
 
 import { api } from "@/convex/_generated/api";
 import { CompaniesTable } from "@/components/CompaniesTable";
@@ -23,7 +23,8 @@ export default function Home() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const isButtonDisabled = !jobTitles?.length || !companies?.length;
+  const isButtonDisabled =
+    isScanningJobs || !jobTitles?.length || !companies?.length;
   const buttonTitle = isButtonDisabled
     ? "Add job keywords to search for job openings"
     : "Scan all companies for job listings";
@@ -39,27 +40,12 @@ export default function Home() {
 
     if (companies && jobTitles?.length) {
       for (const company of companies) {
-        setIsScanningCompany({ id: company._id, state: true });
-      }
-
-      for (const company of companies) {
-        try {
-          const isKeywordFound = await areKeywordsOnPage(company.careerPage, [
-            company.keyword,
-          ]);
-          const isJobFound = await areKeywordsOnPage(
-            company.careerPage,
-            jobTitles,
-          );
-
-          await updateCompany({
-            company: { ...company, isKeywordFound, isJobFound },
-          });
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setIsScanningCompany({ id: company._id, state: false });
-        }
+        scanCompany({
+          company,
+          jobTitles,
+          setIsScanningCompany,
+          updateCompany,
+        });
       }
     }
 

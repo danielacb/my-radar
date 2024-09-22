@@ -23,7 +23,7 @@ export default function Home() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const isButtonDisabled = !jobTitles?.length;
+  const isButtonDisabled = !jobTitles?.length || !companies?.length;
   const buttonTitle = isButtonDisabled
     ? "Add job keywords to search for job openings"
     : "Scan all companies for job listings";

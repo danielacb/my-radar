@@ -36,6 +36,7 @@ export default function CompanyModal({
   const { name, keyword, website, careerPage } = formData;
 
   const jobTitles = useQuery(api.settings.getJobTitles);
+  const companies = useQuery(api.companies.get);
   const updateCompany = useMutation(api.companies.update);
   const createCompany = useMutation(api.companies.create);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
@@ -87,7 +88,15 @@ export default function CompanyModal({
   return (
     <>
       {!company && (
-        <Button variant="flat" onPress={onOpen}>
+        <Button
+          className={
+            !companies?.length
+              ? "border-small border-white/50 shadow-lg text-white bg-gradient-to-br from-cyan-500 to-green-500 shadow-green-200/30"
+              : ""
+          }
+          variant="flat"
+          onPress={onOpen}
+        >
           Add company
         </Button>
       )}

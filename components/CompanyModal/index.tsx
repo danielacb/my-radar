@@ -92,12 +92,17 @@ export default function CompanyModal({
         </Button>
       )}
 
-      <Modal isOpen={isOpen} placement="top-center" onOpenChange={onOpenChange}>
+      <Modal
+        backdrop="blur"
+        isOpen={isOpen}
+        placement="top-center"
+        onOpenChange={onOpenChange}
+      >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Add new company
+              <ModalHeader className="flex flex-col gap-1 text-2xl">
+                {company ? "Edit company" : "Add new company"}
               </ModalHeader>
               <form onSubmit={handleFormSubmit}>
                 <ModalBody>

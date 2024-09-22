@@ -10,6 +10,7 @@ import { api } from "@/convex/_generated/api";
 import { CompaniesTable } from "@/components/CompaniesTable";
 import CompanyModal from "@/components/CompanyModal";
 import SettingsModal from "@/components/SettingsModal";
+import { JobsKeywords } from "@/components/JobKeywords";
 
 export default function Home() {
   const companies = useQuery(api.companies.get);
@@ -21,6 +22,17 @@ export default function Home() {
   const setIsScanningJobs = useMutation(api.settings.setIsScanningJobs);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const isButtonDisabled = !jobTitles?.length;
+  const buttonTitle = isButtonDisabled
+    ? "Add job keywords to search for job openings"
+    : "Scan all companies for job listings";
+  const buttonClasses = `border-small border-white/50 shadow-lg text-white
+    ${
+      isButtonDisabled
+        ? "bg-gray-400 shadow-gray-600/30 cursor-not-allowed"
+        : "bg-gradient-to-br from-cyan-500 to-green-500 shadow-green-200/30"
+    }`;
 
   const handleButtonClick = async () => {
     setIsScanningJobs({ state: true });
@@ -58,14 +70,16 @@ export default function Home() {
     <section className="flex flex-col items-center justify-center gap-4">
       <h1 className="text-4xl font-bold mb-8">My jobs Radar</h1>
       <Button
-        className="bg-gradient-to-br text-white from-cyan-500 to-green-500 border-small border-white/50 shadow-green-200/30 shadow-lg"
-        disabled={!jobTitles?.length}
+        className={buttonClasses}
+        disabled={isButtonDisabled}
         isLoading={isScanningJobs}
         radius="full"
+        title={buttonTitle}
         onClick={handleButtonClick}
       >
         {`${isScanningJobs ? "Scanning" : "Scan"} for Jobs`}
       </Button>
+      <JobsKeywords />
 
       <div className="w-full flex pt-12 justify-between">
         <CompanyModal

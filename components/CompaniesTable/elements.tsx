@@ -25,11 +25,11 @@ export const columns: Column[] = [
   },
   {
     key: "isKeywordFound",
-    label: "Keyword",
+    label: "Page Keyword",
   },
   {
     key: "isJobFound",
-    label: "Job Opening",
+    label: "Job Keyword",
   },
   {
     key: "_id",

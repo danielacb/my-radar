@@ -35,9 +35,16 @@ export const setIsScanningJobs = mutation({
 export const updateJobTitles = mutation({
   args: { jobTitles: v.array(v.string()) },
   handler: async (ctx, { jobTitles }) => {
-    const settings = await ctx.db.query("settings").collect();
-    const id = settings[0]._id;
+    const settingsData = await ctx.db.query("settings").collect();
+    const id = settingsData[0]?._id;
 
-    await ctx.db.patch(id, { jobTitles });
+    if (id) {
+      return await ctx.db.patch(id, { jobTitles });
+    } else {
+      return {
+        isScanningJobs: false,
+        jobTitles: [],
+      };
+    }
   },
 });

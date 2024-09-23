@@ -1,53 +1,70 @@
-# Next.js & NextUI Template
+# My Jobs Radar
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+### Project Goal
+This project is designed to simplify your job search by allowing you to add companies you’re interested in working for. The app will automatically scan their career pages for specific job-related keywords. This saves you the effort of manually checking career pages daily and enables you to scan many companies in just seconds.
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+![image](https://github.com/user-attachments/assets/4be824a8-9953-47fb-815a-b4f5eea3f2a7)
 
-## Technologies Used
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+### Technologies Used
+- [Puppeteer](https://pptr.dev/): Automates the scanning of company career pages for job postings.
+- [Next.js](https://nextjs.org/): Utilizes the API route features to run Puppeteer and handle backend logic.
+- [Next UI](https://nextui.org/) & [Tailwind CSS](https://tailwindcss.com/): Provides a responsive and visually appealing UI while speeding up development.
+- [Convex.dev](https://www.convex.dev/): Serves as the backend to store and manage company and job information.
+
+
+This project was bootstrapped using the Next.js 14 (app directory) and NextUI (v2) [template](https://nextui.org/docs/frameworks/nextjs).
 
 ## How to Use
 
-### Use the template with create-next-app
+### How to Run the Project Locally
 
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
-
-### Install dependencies
-
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+1. Clone the repository and install dependencies:
 
 ```bash
 npm install
 ```
 
-### Run the development server
+3. Set up a Convex project and update your environment variables in .env:
+
+```bash
+CONVEX_DEPLOYMENT=
+NEXT_PUBLIC_CONVEX_URL=
+NEXT_PUBLIC_HOST=http://localhost:3000/
+```
+
+You can find the Convex deployment and URL in your Convex project settings.
+
+3. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-### Setup pnpm (optional)
+### Scanning for Jobs
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+Once the project is running, follow these steps:
 
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
+1. Navigate to `http://localhost:3000/`.
+2. Add job keywords that will be used to scan for relevant job openings across company career pages.
+3. Add a company by filling out the form with the following details:
+    - Company Name
+    - Career Page Keyword (used to verify the page's content)
+    - Company Website
+    - Career Page URL
+  
+> The Career Page Keyword ensures that the career page hasn’t changed since you added the company.
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+## Future Plans
 
-## License
+### Upcoming Features
+- User Authentication: Allow non-technical users to log in and add their own companies without needing to clone the repo.
+- Job Scanning Scheduler: Automate job scans at set intervals.
+- Email Notifications: Notify users via email when new job openings are found.
 
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+### Improvements
+- Implement unit tests and end-to-end tests to ensure the app’s reliability.
+
+### Contributing and Contact
+If you'd like to contribute to this project or have any questions, feel free to open an issue or contact me directly at [contato@danielacb.com](mailto:contato@danielacb.com). I'm always open to feedback, suggestions, and collaboration opportunities!
+

@@ -12,7 +12,14 @@ export const TableNameCell = ({ company }: { company: Company }) => {
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
 
   const handleButtonClick = async () => {
-    scanCompany({ company, jobTitles, setIsScanningCompany, updateCompany });
+    scanCompany({
+      company,
+      jobTitles,
+      setIsScanningCompany,
+      updateCompany,
+      toastSuccessMessage: `Finished scanning for jobs on ${company.name}`,
+      toastErrorMessage: `An error occurred while scanning for jobs on ${company.name}. Please try again!`,
+    });
   };
 
   return (

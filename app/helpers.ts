@@ -1,3 +1,5 @@
+import toast from "react-hot-toast";
+
 import { Id } from "@/convex/_generated/dataModel";
 import { Company } from "@/types";
 
@@ -23,6 +25,8 @@ interface ScanCompanyProps {
   jobTitles: string[];
   setIsScanningCompany: (args: { id: Id<"companies">; state: boolean }) => void;
   updateCompany: (args: { company: Company }) => Promise<null>;
+  toastErrorMessage: string;
+  toastSuccessMessage?: string;
 }
 
 export const scanCompany = async ({
@@ -30,6 +34,8 @@ export const scanCompany = async ({
   jobTitles,
   setIsScanningCompany,
   updateCompany,
+  toastErrorMessage,
+  toastSuccessMessage,
 }: ScanCompanyProps) => {
   setIsScanningCompany({ id: company._id, state: true });
 
@@ -42,8 +48,10 @@ export const scanCompany = async ({
     await updateCompany({
       company: { ...company, isKeywordFound, isJobFound },
     });
+
+    if (toastSuccessMessage) toast.success(toastSuccessMessage);
   } catch (error) {
-    console.error(error);
+    toast.error(toastErrorMessage);
   } finally {
     setIsScanningCompany({ id: company._id, state: false });
   }

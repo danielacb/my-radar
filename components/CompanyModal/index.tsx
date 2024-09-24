@@ -60,6 +60,8 @@ export default function CompanyModal({
         jobTitles,
         setIsScanningCompany,
         updateCompany,
+        toastSuccessMessage: `Information for ${formData.name} updated successfully!`,
+        toastErrorMessage: `An error occurred while scanning for jobs on ${formData.name}. Please try again!`,
       });
     } else {
       await createCompany({ name, keyword, careerPage, website }).then(
@@ -69,6 +71,8 @@ export default function CompanyModal({
             jobTitles,
             setIsScanningCompany,
             updateCompany,
+            toastSuccessMessage: `Finished scanning for jobs on ${company.name}`,
+            toastErrorMessage: `An error occurred while scanning for jobs on ${company.name}. Please try again!`,
           });
         },
       );

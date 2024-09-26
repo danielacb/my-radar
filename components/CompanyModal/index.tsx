@@ -27,12 +27,14 @@ export default function CompanyModal({
   onOpen,
   onOpenChange,
 }: CompanyModalProps) {
-  const [formData, setFormData] = useState({
+  const initialFormValues = {
     name: company?.name || "",
     careerPage: company?.careerPage || "",
     keyword: company?.keyword || "",
     website: company?.website || "",
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormValues);
   const { name, keyword, website, careerPage } = formData;
 
   const jobTitles = useQuery(api.settings.getJobTitles) || [];
@@ -76,6 +78,8 @@ export default function CompanyModal({
           });
         },
       );
+
+      setFormData(initialFormValues);
     }
   };
 

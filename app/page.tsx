@@ -3,8 +3,10 @@
 import { useMutation, useQuery } from "convex/react";
 import { Button } from "@nextui-org/button";
 import { useDisclosure } from "@nextui-org/modal";
+import toast, { ToastType, Toaster, resolveValue } from "react-hot-toast";
+import { Chip, ChipProps } from "@nextui-org/chip";
 
-import { areKeywordsOnPage } from "./helpers";
+import { scanCompany } from "./helpers";
 
 import { api } from "@/convex/_generated/api";
 import { CompaniesTable } from "@/components/CompaniesTable";
@@ -23,7 +25,8 @@ export default function Home() {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  const isButtonDisabled = !jobTitles?.length || !companies?.length;
+  const isButtonDisabled =
+    isScanningJobs || !jobTitles?.length || !companies?.length;
   const buttonTitle = isButtonDisabled
     ? "Add job keywords to search for job openings"
     : "Scan all companies for job listings";
@@ -34,36 +37,43 @@ export default function Home() {
         : "bg-gradient-to-br from-cyan-500 to-green-500 shadow-green-200/30"
     }`;
 
+  const getChipColor = (type: ToastType) => {
+    const colors: Record<ToastType, ChipProps["color"]> = {
+      success: "success",
+      error: "danger",
+      loading: "default",
+      blank: "default",
+      custom: "default",
+    };
+
+    return colors[type];
+  };
+
   const handleButtonClick = async () => {
-    setIsScanningJobs({ state: true });
-
     if (companies && jobTitles?.length) {
-      for (const company of companies) {
-        setIsScanningCompany({ id: company._id, state: true });
-      }
+      setIsScanningJobs({ state: true });
 
-      for (const company of companies) {
-        try {
-          const isKeywordFound = await areKeywordsOnPage(company.careerPage, [
-            company.keyword,
-          ]);
-          const isJobFound = await areKeywordsOnPage(
-            company.careerPage,
+      try {
+        const scanPromises = companies.map((company) =>
+          scanCompany({
+            company,
             jobTitles,
-          );
+            setIsScanningCompany,
+            updateCompany,
+            toastErrorMessage: `An error occurred while scanning for jobs on ${company.name}. Please try again!`,
+          }),
+        );
 
-          await updateCompany({
-            company: { ...company, isKeywordFound, isJobFound },
-          });
-        } catch (error) {
-          console.log(error);
-        } finally {
-          setIsScanningCompany({ id: company._id, state: false });
-        }
+        await Promise.all(scanPromises);
+        toast.success("Finished scanning for jobs");
+      } catch {
+        toast.error(
+          "An unexpected error occurred while scanning companies. Please try again!",
+        );
+      } finally {
+        setIsScanningJobs({ state: false });
       }
     }
-
-    setIsScanningJobs({ state: false });
   };
 
   return (
@@ -91,6 +101,20 @@ export default function Home() {
       </div>
 
       <CompaniesTable companies={companies} />
+
+      <Toaster gutter={8} position="bottom-right">
+        {(t) => (
+          <Chip
+            className="w-full max-w-xs px-2 py-4 h-12"
+            color={getChipColor(t.type)}
+            radius="sm"
+            variant="faded"
+            onClose={() => toast.dismiss(t.id)}
+          >
+            {resolveValue(t.message, t)}
+          </Chip>
+        )}
+      </Toaster>
     </section>
   );
 }

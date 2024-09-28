@@ -56,31 +56,34 @@ export default function CompanyModal({
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (company) {
-      await scanCompany({
-        company: { ...company, ...formData },
-        jobTitles,
-        setIsScanningCompany,
-        updateCompany,
-        toastSuccessMessage: `Information for ${formData.name} updated successfully!`,
-        toastErrorMessage: `An error occurred while scanning for jobs on ${formData.name}. Please try again!`,
-      });
-    } else {
-      await createCompany({ name, keyword, careerPage, website }).then(
-        async (company) => {
-          await scanCompany({
-            company,
-            jobTitles,
-            setIsScanningCompany,
-            updateCompany,
-            toastSuccessMessage: `Finished scanning for jobs on ${company.name}`,
-            toastErrorMessage: `An error occurred while scanning for jobs on ${company.name}. Please try again!`,
-          });
-        },
-      );
+    let currentCompany;
 
-      setFormData(initialFormValues);
+    if (company) {
+      currentCompany = { ...company, ...formData };
+      await updateCompany({ company: currentCompany });
+    } else {
+      currentCompany = await createCompany({
+        name,
+        keyword,
+        careerPage,
+        website,
+      });
     }
+
+    const toastSuccessMessage = company
+      ? `Information for ${formData.name} updated successfully!`
+      : `Finished scanning for jobs on ${currentCompany.name}`;
+
+    await scanCompany({
+      company: currentCompany,
+      jobTitles,
+      setIsScanningCompany,
+      updateCompany,
+      toastSuccessMessage,
+      toastErrorMessage: `An error occurred while scanning for jobs on ${formData.name}. Please try again!`,
+    });
+
+    setFormData(initialFormValues);
   };
 
   return (

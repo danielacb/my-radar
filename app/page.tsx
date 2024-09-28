@@ -3,8 +3,8 @@
 import { useMutation, useQuery } from "convex/react";
 import { Button } from "@nextui-org/button";
 import { useDisclosure } from "@nextui-org/modal";
-import toast, { Toaster, resolveValue } from "react-hot-toast";
-import { Chip } from "@nextui-org/chip";
+import toast, { ToastType, Toaster, resolveValue } from "react-hot-toast";
+import { Chip, ChipProps } from "@nextui-org/chip";
 
 import { scanCompany } from "./helpers";
 
@@ -37,24 +37,42 @@ export default function Home() {
         : "bg-gradient-to-br from-cyan-500 to-green-500 shadow-green-200/30"
     }`;
 
+  const getChipColor = (type: ToastType) => {
+    const colors: Record<ToastType, ChipProps["color"]> = {
+      success: "success",
+      error: "danger",
+      loading: "default",
+      blank: "default",
+      custom: "default",
+    };
+
+    return colors[type];
+  };
+
   const handleButtonClick = async () => {
     if (companies && jobTitles?.length) {
       setIsScanningJobs({ state: true });
 
-      const scanPromises = companies.map((company) =>
-        scanCompany({
-          company,
-          jobTitles,
-          setIsScanningCompany,
-          updateCompany,
-          toastErrorMessage: `An error occurred while scanning for jobs on ${company.name}. Please try again!`,
-        }),
-      );
+      try {
+        const scanPromises = companies.map((company) =>
+          scanCompany({
+            company,
+            jobTitles,
+            setIsScanningCompany,
+            updateCompany,
+            toastErrorMessage: `An error occurred while scanning for jobs on ${company.name}. Please try again!`,
+          }),
+        );
 
-      await Promise.all(scanPromises);
-      toast.success("Finished scanning for jobs");
-
-      setIsScanningJobs({ state: false });
+        await Promise.all(scanPromises);
+        toast.success("Finished scanning for jobs");
+      } catch {
+        toast.error(
+          "An unexpected error occurred while scanning companies. Please try again!",
+        );
+      } finally {
+        setIsScanningJobs({ state: false });
+      }
     }
   };
 
@@ -88,13 +106,7 @@ export default function Home() {
         {(t) => (
           <Chip
             className="w-full max-w-xs px-2 py-4 h-12"
-            color={
-              t.type === "success"
-                ? "success"
-                : t.type === "error"
-                  ? "danger"
-                  : "default"
-            }
+            color={getChipColor(t.type)}
             radius="sm"
             variant="faded"
             onClose={() => toast.dismiss(t.id)}

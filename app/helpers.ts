@@ -51,6 +51,7 @@ export const scanCompany = async ({
 
     if (toastSuccessMessage) toast.success(toastSuccessMessage);
   } catch (error) {
+    console.error("Error in scanCompany:", error);
     toast.error(toastErrorMessage);
   } finally {
     setIsScanningCompany({ id: company._id, state: false });

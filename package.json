@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.6.4",
+    "@clerk/types": "^4.25.0",
     "@nextui-org/button": "2.0.37",
     "@nextui-org/card": "^2.0.34",
     "@nextui-org/checkbox": "^2.1.5",

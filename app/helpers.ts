@@ -57,3 +57,25 @@ export const scanCompany = async ({
     setIsScanningCompany({ id: company._id, state: false });
   }
 };
+
+export interface EmailValidationResult {
+  isValid: boolean;
+  message?: string;
+}
+
+export const validateEmail = (
+  email: string | undefined | null,
+): EmailValidationResult => {
+  const trimmedEmail = email?.trim() || "";
+
+  if (trimmedEmail === "") {
+    return {
+      isValid: false,
+      message: "Please enter your email address",
+    };
+  }
+
+  return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(trimmedEmail)
+    ? { isValid: true }
+    : { isValid: false, message: "Please enter a valid email address" };
+};

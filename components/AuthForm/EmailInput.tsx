@@ -1,7 +1,7 @@
 import { Input } from "@nextui-org/input";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import { EmailValidationResult, validateEmail } from "@/app/helpers";
+import { ValidationResult, validateEmail } from "@/app/helpers";
 
 interface EmailInputProps {
   email: string;
@@ -9,11 +9,21 @@ interface EmailInputProps {
 }
 
 export const EmailInput = ({ email, setEmail }: EmailInputProps) => {
-  const [isEmailValid, setIsEmailValid] = useState<EmailValidationResult>({
+  const [wasTouched, setWasTouched] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState<ValidationResult>({
     isValid: true,
   });
 
-  const handleEmailBlur = () => {
+  useEffect(() => {
+    if (wasTouched) {
+      const isValid = validateEmail(email);
+
+      setIsEmailValid(isValid);
+    }
+  }, [email]);
+
+  const handleBlur = () => {
+    setWasTouched(true);
     const isValid = validateEmail(email);
 
     setIsEmailValid(isValid);
@@ -30,7 +40,7 @@ export const EmailInput = ({ email, setEmail }: EmailInputProps) => {
       type="email"
       value={email}
       variant={isEmailValid.isValid ? "flat" : "bordered"}
-      onBlur={handleEmailBlur}
+      onBlur={handleBlur}
       onChange={(e) => setEmail(e.target.value)}
     />
   );

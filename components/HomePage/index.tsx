@@ -69,7 +69,7 @@ export const HomePage = () => {
       </div>
       <Button
         className={buttonClasses}
-        disabled={isButtonDisabled}
+        isDisabled={isButtonDisabled}
         isLoading={isScanningJobs}
         radius="full"
         title={buttonTitle}

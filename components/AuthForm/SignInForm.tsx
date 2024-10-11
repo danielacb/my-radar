@@ -3,13 +3,18 @@
 import { FormEvent, useState } from "react";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
+
+import { EmailInput } from "./EmailInput";
+import { PasswordInput } from "./PasswordInput";
+
+import { validateEmail, validatePassword } from "@/app/helpers";
 
 export const SignInForm = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const router = useRouter();
 
   // Handle the submission of the sign-in form
@@ -44,27 +49,16 @@ export const SignInForm = () => {
     }
   };
 
+  const isButtonDisabled = !(
+    validateEmail(email).isValid && validatePassword(password).isValid
+  );
+
   return (
     <form className="mt-4 text-right" onSubmit={(e) => handleSubmit(e)}>
-      <Input
-        className="mb-4"
-        label="Email"
-        size="sm"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      <EmailInput email={email} setEmail={setEmail} />
+      <PasswordInput password={password} setPassword={setPassword} />
 
-      <Input
-        className="mb-4"
-        label="Password"
-        size="sm"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <Button color="success" type="submit">
+      <Button color="success" isDisabled={isButtonDisabled} type="submit">
         Continue
       </Button>
     </form>

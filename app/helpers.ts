@@ -58,14 +58,14 @@ export const scanCompany = async ({
   }
 };
 
-export interface EmailValidationResult {
+export interface ValidationResult {
   isValid: boolean;
   message?: string;
 }
 
 export const validateEmail = (
   email: string | undefined | null,
-): EmailValidationResult => {
+): ValidationResult => {
   const trimmedEmail = email?.trim() || "";
 
   if (trimmedEmail === "") {
@@ -78,4 +78,22 @@ export const validateEmail = (
   return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(trimmedEmail)
     ? { isValid: true }
     : { isValid: false, message: "Please enter a valid email address" };
+};
+
+export const validatePassword = (password: string): ValidationResult => {
+  if (password === "") {
+    return {
+      isValid: false,
+      message: "Password is required",
+    };
+  }
+
+  if (password.length < 8) {
+    return {
+      isValid: false,
+      message: "Password must be at least 8 characters long",
+    };
+  }
+
+  return { isValid: true };
 };

@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
 import { ClerkAPIError } from "@clerk/types";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
-import { Card } from "@nextui-org/card";
 
+import { ErrorsCard } from "./ErrorsCard";
 import { EmailInput } from "./EmailInput";
 import { PasswordInput } from "./PasswordInput";
 
@@ -70,16 +70,7 @@ export const SignInForm = () => {
         </Button>
       </form>
 
-      {errors?.map((error) => (
-        <Card
-          key={`${error.code}-${error.message}`}
-          className="rounded-md p-4 text-left mt-4 bg-danger-100"
-        >
-          <p className="text-sm font-mono my-2 text-danger-foreground">
-            {error.longMessage}
-          </p>
-        </Card>
-      ))}
+      <ErrorsCard errors={errors} />
     </>
   );
 };

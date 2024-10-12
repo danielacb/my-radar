@@ -3,15 +3,26 @@
 import { FormEvent, useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { Card } from "@nextui-org/card";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
+import { ClerkAPIError } from "@clerk/types";
+import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
+
+import { EmailInput } from "./EmailInput";
+import { PasswordInput } from "./PasswordInput";
+
+import { validateEmail, validatePassword } from "@/app/helpers";
 
 export const SignUpForm = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
-  const [emailAddress, setEmailAddress] = useState("");
-  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<ClerkAPIError[]>();
   const [verifying, setVerifying] = useState(false);
   const [code, setCode] = useState("");
+
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+
   const router = useRouter();
 
   // Handle submission of the sign-up form
@@ -38,6 +49,7 @@ export const SignUpForm = () => {
     } catch (err) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
+      if (isClerkAPIResponseError(err)) setErrors(err.errors);
       console.error(JSON.stringify(err, null, 2));
     }
   };
@@ -67,6 +79,7 @@ export const SignUpForm = () => {
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
+      if (isClerkAPIResponseError(err)) setErrors(err.errors);
       console.error("Error:", JSON.stringify(err, null, 2));
     }
   };
@@ -74,8 +87,13 @@ export const SignUpForm = () => {
   // Display the verification form to capture the OTP code
   if (verifying) {
     return (
-      <>
-        <h1>Verify your email</h1>
+      <div className="text-right">
+        <h2 className="mt-4 text-lg font-bold text-center mb-2">
+          Verify your email
+        </h2>
+        <p className="text-center text-medium mb-4">
+          We sent a code to {emailAddress}
+        </p>
         <form onSubmit={handleVerify}>
           <Input
             id="code"
@@ -84,36 +102,56 @@ export const SignUpForm = () => {
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
-          <Button type="submit">Verify</Button>
+          <Button
+            className="mt-4"
+            color="success"
+            isDisabled={!code}
+            type="submit"
+          >
+            Verify
+          </Button>
         </form>
-      </>
+
+        {errors?.map((error) => (
+          <Card
+            key={`${error.code}-${error.message}`}
+            className="rounded-md p-4 text-left mt-4 bg-danger-100"
+          >
+            <p className="text-sm font-mono my-2 text-danger-foreground">
+              {error.longMessage}
+            </p>
+          </Card>
+        ))}
+      </div>
     );
   }
 
+  const isButtonDisabled = !(
+    validateEmail(emailAddress).isValid && validatePassword(password).isValid
+  );
+
   // Display the initial sign-up form to capture the email and password
   return (
-    <form className="mt-4 text-right" onSubmit={handleSubmit}>
-      <Input
-        className="mb-4"
-        label="Email"
-        size="sm"
-        type="email"
-        value={emailAddress}
-        onChange={(e) => setEmailAddress(e.target.value)}
-      />
+    <>
+      <form className="mt-4 text-right" onSubmit={handleSubmit}>
+        <EmailInput email={emailAddress} setEmail={setEmailAddress} />
+        <PasswordInput password={password} setPassword={setPassword} />
 
-      <Input
-        className="mb-4"
-        label="Password"
-        size="sm"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <Button color="success" isDisabled={isButtonDisabled} type="submit">
+          Continue
+        </Button>
+      </form>
 
-      <Button color="success" type="submit">
-        Continue
-      </Button>
-    </form>
+      {errors?.map((error) => (
+        <Card
+          key={`${error.code}-${error.message}`}
+          className="rounded-md p-4 text-left mt-4 bg-danger-100"
+        >
+          <p className="text-sm font-mono my-2 text-danger-foreground">
+            {error.longMessage}
+          </p>
+        </Card>
+      ))}
+    </>
   );
 };

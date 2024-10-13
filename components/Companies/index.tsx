@@ -4,9 +4,10 @@ import { useDisclosure } from "@nextui-org/modal";
 import toast from "react-hot-toast";
 import { UserButton } from "@clerk/nextjs";
 
+import { CompaniesTable } from "./CompaniesTable";
+import CompanyModal from "./CompanyModal";
+
 import { api } from "@/convex/_generated/api";
-import { CompaniesTable } from "@/components/CompaniesTable";
-import CompanyModal from "@/components/CompanyModal";
 import SettingsModal from "@/components/SettingsModal";
 import { JobsKeywords } from "@/components/JobKeywords";
 import { scanCompany } from "@/app/helpers";

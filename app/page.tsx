@@ -1,10 +1,8 @@
 "use client";
 
-import { Authenticated, Unauthenticated } from "convex/react";
 import toast, { ToastType, Toaster, resolveValue } from "react-hot-toast";
 import { Chip, ChipProps } from "@nextui-org/chip";
 
-import { AuthForm } from "@/components/AuthForm";
 import { HomePage } from "@/components/HomePage";
 
 export default function Home() {
@@ -22,12 +20,7 @@ export default function Home() {
 
   return (
     <>
-      <Unauthenticated>
-        <AuthForm />
-      </Unauthenticated>
-      <Authenticated>
-        <HomePage />
-      </Authenticated>
+      <HomePage />
 
       <Toaster gutter={8} position="bottom-right">
         {(t) => (

@@ -12,7 +12,27 @@ export const CompanyType = {
   website: v.string(),
 };
 
+const UserType = {
+  clerkId: v.string(),
+  companies: v.array(
+    v.object({
+      careerPage: v.object({
+        keyword: v.string(),
+        url: v.string(),
+      }),
+      isJobFound: v.boolean(),
+      isJobTitleFound: v.boolean(),
+      name: v.string(),
+      website: v.string(),
+    }),
+  ),
+  email: v.string(),
+  isScanningJobs: v.boolean(),
+  jobTitles: v.array(v.string()),
+};
+
 export default defineSchema({
+  users: defineTable(UserType),
   companies: defineTable(CompanyType),
   settings: defineTable({
     isScanningJobs: v.boolean(),

@@ -7,11 +7,13 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { ClerkAPIError } from "@clerk/types";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
+import { useMutation } from "convex/react";
 
 import { ErrorsCard } from "./ErrorsCard";
 import { EmailInput } from "./EmailInput";
 import { PasswordInput } from "./PasswordInput";
 
+import { api } from "@/convex/_generated/api";
 import { validateEmail, validatePassword } from "@/app/helpers";
 
 export const SignUpForm = () => {
@@ -22,6 +24,8 @@ export const SignUpForm = () => {
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+
+  const createUser = useMutation(api.users.create);
 
   const router = useRouter();
 
@@ -68,7 +72,12 @@ export const SignUpForm = () => {
 
       // If verification was completed, set the session to active
       // and redirect the user
-      if (signUpAttempt.status === "complete") {
+      if (signUpAttempt.status === "complete" && signUpAttempt.id) {
+        await createUser({
+          clerkId: signUpAttempt.id,
+          email: signUpAttempt.emailAddress || "",
+        });
+
         await setActive({ session: signUpAttempt.createdSessionId });
         router.push("/");
       } else {

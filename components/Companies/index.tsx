@@ -1,8 +1,10 @@
 import { useMutation, useQuery } from "convex/react";
 import { Button } from "@nextui-org/button";
 import { useDisclosure } from "@nextui-org/modal";
+import { useClerk } from "@clerk/nextjs";
 import toast from "react-hot-toast";
-import { UserButton } from "@clerk/nextjs";
+
+import { SignOutIcon } from "../icons";
 
 import { CompaniesTable } from "./CompaniesTable";
 import CompanyModal from "./CompanyModal";
@@ -22,6 +24,8 @@ export const Companies = () => {
   const setIsScanningJobs = useMutation(api.settings.setIsScanningJobs);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const { signOut } = useClerk();
 
   const isButtonDisabled =
     isScanningJobs || !jobTitles?.length || !companies?.length;
@@ -66,7 +70,14 @@ export const Companies = () => {
     <section className="flex flex-col items-center justify-center gap-4">
       <div className="flex w-full items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">My jobs Radar</h1>
-        <UserButton />
+
+        <Button
+          startContent={<SignOutIcon />}
+          variant="bordered"
+          onClick={() => signOut({ redirectUrl: "/" })}
+        >
+          Sign out
+        </Button>
       </div>
       <Button
         className={buttonClasses}

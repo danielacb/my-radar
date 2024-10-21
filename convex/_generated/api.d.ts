@@ -17,6 +17,7 @@ import type {
 } from "convex/server";
 import type * as companies from "../companies.js";
 import type * as settings from "../settings.js";
+import type * as users from "../users.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -29,6 +30,7 @@ import type * as settings from "../settings.js";
 declare const fullApi: ApiFromModules<{
   companies: typeof companies;
   settings: typeof settings;
+  users: typeof users;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

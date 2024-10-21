@@ -10,6 +10,7 @@ export const ErrorsCard = ({ errors = [] }: { errors?: ClerkAPIError[] }) => {
         <p
           key={`${error.code}-${error.message}`}
           className="text-sm font-mono my-2 text-danger"
+          role="alert"
         >
           {error.longMessage}
         </p>

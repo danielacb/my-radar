@@ -30,7 +30,9 @@ export const Companies = () => {
   const isButtonDisabled =
     isScanningJobs || !jobTitles?.length || !companies?.length;
   const buttonTitle = isButtonDisabled
-    ? "Add job keywords to search for job openings"
+    ? isScanningJobs
+      ? "Scanning in progress..."
+      : "Add job keywords to search for job openings"
     : "Scan all companies for job listings";
   const buttonClasses = `border-small border-white/50 shadow-lg text-white
       ${

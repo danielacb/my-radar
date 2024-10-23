@@ -72,14 +72,14 @@ export const SignUpForm = () => {
 
       // If verification was completed, set the session to active
       // and redirect the user
-      if (signUpAttempt.status === "complete" && signUpAttempt.id) {
+      if (signUpAttempt.status === "complete" && signUpAttempt.createdUserId) {
         await createUser({
-          clerkId: signUpAttempt.id,
+          clerkId: signUpAttempt.createdUserId,
           email: signUpAttempt.emailAddress || "",
         });
 
         await setActive({ session: signUpAttempt.createdSessionId });
-        router.push("/");
+        router.push("/companies");
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.

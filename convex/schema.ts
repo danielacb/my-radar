@@ -13,38 +13,27 @@ export const CompanyType = {
 };
 
 export const CompanyType2 = {
-  list: v.array(
-    v.object({
-      careerPage: v.object({
-        url: v.string(),
-        keyword: v.string(),
-        isKeywordFound: v.boolean(),
-      }),
-      isJobTitleFound: v.boolean(),
-      name: v.string(),
-      website: v.string(),
-      lastScanDate: v.optional(v.number()),
-    }),
-  ),
-  userId: v.optional(v.id("users")),
-  isScanningJobs: v.boolean(),
+  userId: v.id("users"),
+  name: v.string(),
+  website: v.string(),
+  isJobTitleFound: v.boolean(),
   lastScanDate: v.optional(v.number()),
+  careerPage: v.object({
+    url: v.string(),
+    keyword: v.string(),
+    isKeywordFound: v.boolean(),
+  }),
 };
 
 const UserType = {
   clerkId: v.string(),
   email: v.string(),
   jobTitles: v.array(v.string()),
-  companiesId: v.id("companies2"),
+  isScanningJobs: v.boolean(),
 };
 
 export default defineSchema({
   users: defineTable(UserType),
   companies: defineTable(CompanyType),
   companies2: defineTable(CompanyType2),
-  settings: defineTable({
-    isScanningJobs: v.boolean(),
-    jobTitles: v.array(v.string()),
-    theme: v.string(),
-  }),
 });

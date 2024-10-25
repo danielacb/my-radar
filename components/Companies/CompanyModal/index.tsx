@@ -37,7 +37,7 @@ export default function CompanyModal({
   const [formData, setFormData] = useState(initialFormValues);
   const { name, keyword, website, careerPage } = formData;
 
-  const jobTitles = useQuery(api.settings.getJobTitles) || [];
+  const jobTitles = useQuery(api.users.getJobTitles) || [];
   const companies = useQuery(api.companies.get);
   const updateCompany = useMutation(api.companies.update);
   const createCompany = useMutation(api.companies.create);

@@ -11,17 +11,17 @@ import CompanyModal from "./CompanyModal";
 
 import { api } from "@/convex/_generated/api";
 import SettingsModal from "@/components/SettingsModal";
-import { JobsKeywords } from "@/components/JobKeywords";
+import { JobKeywords } from "@/components/JobKeywords";
 import { scanCompany } from "@/app/helpers";
 
 export const Companies = () => {
   const companies = useQuery(api.companies.get);
-  const jobTitles = useQuery(api.settings.getJobTitles);
-  const isScanningJobs = useQuery(api.settings.getIsScanningJobs);
+  const jobTitles = useQuery(api.users.getJobTitles);
+  const isScanningJobs = useQuery(api.users.getIsScanningJobs);
 
   const updateCompany = useMutation(api.companies.update);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
-  const setIsScanningJobs = useMutation(api.settings.setIsScanningJobs);
+  const setIsScanningJobs = useMutation(api.users.setIsScanningJobs);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -91,7 +91,7 @@ export const Companies = () => {
       >
         {`${isScanningJobs ? "Scanning" : "Scan"} for Jobs`}
       </Button>
-      <JobsKeywords />
+      <JobKeywords />
 
       <div className="w-full flex pt-12 justify-between">
         <CompanyModal

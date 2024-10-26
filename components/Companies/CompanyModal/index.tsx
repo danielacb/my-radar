@@ -82,8 +82,6 @@ export default function CompanyModal({
       toastSuccessMessage,
       toastErrorMessage: `An error occurred while scanning for jobs on ${formData.name}. Please try again!`,
     });
-
-    setFormData(initialFormValues);
   };
 
   return (

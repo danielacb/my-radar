@@ -35,7 +35,7 @@ export const CompaniesTable = ({ companies }: CompaniesTableProps) => {
         return (
           <TableChip isFound={isKeywordFound} isLoading={isScanningKeyword} />
         );
-      case "isJobFound":
+      case "isJobTitleFound":
         return (
           <TableChip isFound={isJobTitleFound} isLoading={isScanningJob} />
         );

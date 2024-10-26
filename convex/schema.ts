@@ -23,5 +23,5 @@ const UserType = {
 
 export default defineSchema({
   users: defineTable(UserType),
-  companies: defineTable(CompanyType),
+  companies: defineTable(CompanyType).index("by_user", ["userId"]),
 });

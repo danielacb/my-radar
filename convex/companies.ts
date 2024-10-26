@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 
 import { mutation, query } from "./_generated/server";
-import { getAuthenticatedUser } from "./helpers";
+import { getAuthenticatedUser, validateCompanyOwnership } from "./helpers";
 import { CompanyType } from "./schema";
 
 export const get = query({
@@ -13,10 +13,6 @@ export const get = query({
       .query("companies")
       .filter((q) => q.eq(q.field("userId"), user?._id))
       .collect();
-
-    if (!company) {
-      throw new Error("No company found for this user");
-    }
 
     return company;
   },
@@ -66,6 +62,8 @@ export const update = mutation({
     }),
   },
   handler: async (ctx, { company }) => {
+    await validateCompanyOwnership(ctx, company._id);
+
     await ctx.db.patch(company._id, { ...company });
   },
 });
@@ -73,6 +71,8 @@ export const update = mutation({
 export const deleteCompany = mutation({
   args: { id: v.id("companies") },
   handler: async (ctx, { id }) => {
+    await validateCompanyOwnership(ctx, id);
+
     await ctx.db.delete(id);
   },
 });
@@ -80,6 +80,8 @@ export const deleteCompany = mutation({
 export const setIsScanningCompany = mutation({
   args: { id: v.id("companies"), state: v.boolean() },
   handler: async (ctx, { id, state }) => {
+    await validateCompanyOwnership(ctx, id);
+
     await ctx.db.patch(id, {
       isScanningKeyword: state,
       isScanningJob: state,

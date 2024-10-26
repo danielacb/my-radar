@@ -8,7 +8,7 @@ import {
   ModalFooter,
 } from "@nextui-org/modal";
 import { useMutation, useQuery } from "convex/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import { api } from "@/convex/_generated/api";
 import { Company } from "@/types";
@@ -42,6 +42,10 @@ export default function CompanyModal({
   const updateCompany = useMutation(api.companies.update);
   const createCompany = useMutation(api.companies.create);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
+
+  useEffect(() => {
+    setFormData(initialFormValues);
+  }, [isOpen]);
 
   const handleValueChange = (
     value: string,

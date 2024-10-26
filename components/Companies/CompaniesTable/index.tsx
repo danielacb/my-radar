@@ -21,8 +21,12 @@ interface CompaniesTableProps {
 
 export const CompaniesTable = ({ companies }: CompaniesTableProps) => {
   const renderCell = useCallback((company: Company, columnKey: Key) => {
-    const { isJobFound, isScanningJob, isKeywordFound, isScanningKeyword } =
-      company;
+    const {
+      isJobTitleFound,
+      isScanningJob,
+      isKeywordFound,
+      isScanningKeyword,
+    } = company;
 
     switch (columnKey) {
       case "name":
@@ -32,7 +36,9 @@ export const CompaniesTable = ({ companies }: CompaniesTableProps) => {
           <TableChip isFound={isKeywordFound} isLoading={isScanningKeyword} />
         );
       case "isJobFound":
-        return <TableChip isFound={isJobFound} isLoading={isScanningJob} />;
+        return (
+          <TableChip isFound={isJobTitleFound} isLoading={isScanningJob} />
+        );
       case "_id":
         return <TableDropdown company={company} />;
       default:

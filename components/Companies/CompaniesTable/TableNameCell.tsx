@@ -7,7 +7,7 @@ import { Company } from "@/types";
 import { scanCompany } from "@/app/helpers";
 
 export const TableNameCell = ({ company }: { company: Company }) => {
-  const jobTitles = useQuery(api.settings.getJobTitles) || [];
+  const jobTitles = useQuery(api.users.getJobTitles) || [];
   const updateCompany = useMutation(api.companies.update);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
 

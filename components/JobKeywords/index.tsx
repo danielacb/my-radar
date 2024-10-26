@@ -14,9 +14,9 @@ import { JobKeywordInput } from "./JobKeywordInput";
 
 import { api } from "@/convex/_generated/api";
 
-export const JobsKeywords = () => {
-  const jobTitles = useQuery(api.settings.getJobTitles);
-  const updateJobTitles = useMutation(api.settings.updateJobTitles);
+export const JobKeywords = () => {
+  const jobTitles = useQuery(api.users.getJobTitles);
+  const updateJobTitles = useMutation(api.users.updateJobTitles);
 
   const handleDelete = async (jobTitle: string) => {
     const newJobTitles = jobTitles?.filter((title) => title !== jobTitle);

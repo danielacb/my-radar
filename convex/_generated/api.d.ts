@@ -16,7 +16,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as companies from "../companies.js";
-import type * as settings from "../settings.js";
+import type * as helpers from "../helpers.js";
 import type * as users from "../users.js";
 
 /**
@@ -29,7 +29,7 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   companies: typeof companies;
-  settings: typeof settings;
+  helpers: typeof helpers;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

@@ -43,10 +43,13 @@ export const scanCompany = async ({
     const isKeywordFound = await areKeywordsOnPage(company.careerPage, [
       company.keyword,
     ]);
-    const isJobFound = await areKeywordsOnPage(company.careerPage, jobTitles);
+    const isJobTitleFound = await areKeywordsOnPage(
+      company.careerPage,
+      jobTitles,
+    );
 
     await updateCompany({
-      company: { ...company, isKeywordFound, isJobFound },
+      company: { ...company, isKeywordFound, isJobTitleFound },
     });
 
     if (toastSuccessMessage) toast.success(toastSuccessMessage);

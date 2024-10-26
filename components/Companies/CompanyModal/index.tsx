@@ -8,7 +8,7 @@ import {
   ModalFooter,
 } from "@nextui-org/modal";
 import { useMutation, useQuery } from "convex/react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 import { api } from "@/convex/_generated/api";
 import { Company } from "@/types";
@@ -37,11 +37,15 @@ export default function CompanyModal({
   const [formData, setFormData] = useState(initialFormValues);
   const { name, keyword, website, careerPage } = formData;
 
-  const jobTitles = useQuery(api.settings.getJobTitles) || [];
+  const jobTitles = useQuery(api.users.getJobTitles) || [];
   const companies = useQuery(api.companies.get);
   const updateCompany = useMutation(api.companies.update);
   const createCompany = useMutation(api.companies.create);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
+
+  useEffect(() => {
+    setFormData(initialFormValues);
+  }, [isOpen]);
 
   const handleValueChange = (
     value: string,
@@ -82,8 +86,6 @@ export default function CompanyModal({
       toastSuccessMessage,
       toastErrorMessage: `An error occurred while scanning for jobs on ${formData.name}. Please try again!`,
     });
-
-    setFormData(initialFormValues);
   };
 
   return (

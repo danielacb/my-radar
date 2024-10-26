@@ -2,41 +2,26 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export const CompanyType = {
-  careerPage: v.string(),
-  isJobFound: v.boolean(),
-  isScanningJob: v.boolean(),
-  isKeywordFound: v.boolean(),
-  isScanningKeyword: v.boolean(),
-  keyword: v.string(),
+  userId: v.id("users"),
   name: v.string(),
   website: v.string(),
+  isJobTitleFound: v.boolean(),
+  lastScanDate: v.optional(v.number()),
+  isScanningJob: v.boolean(),
+  careerPage: v.string(),
+  keyword: v.string(),
+  isKeywordFound: v.boolean(),
+  isScanningKeyword: v.boolean(),
 };
 
 const UserType = {
   clerkId: v.string(),
-  companies: v.array(
-    v.object({
-      careerPage: v.object({
-        keyword: v.string(),
-        url: v.string(),
-      }),
-      isJobFound: v.boolean(),
-      isJobTitleFound: v.boolean(),
-      name: v.string(),
-      website: v.string(),
-    }),
-  ),
   email: v.string(),
-  isScanningJobs: v.boolean(),
   jobTitles: v.array(v.string()),
+  isScanningJobs: v.boolean(),
 };
 
 export default defineSchema({
   users: defineTable(UserType),
-  companies: defineTable(CompanyType),
-  settings: defineTable({
-    isScanningJobs: v.boolean(),
-    jobTitles: v.array(v.string()),
-    theme: v.string(),
-  }),
+  companies: defineTable(CompanyType).index("by_user", ["userId"]),
 });

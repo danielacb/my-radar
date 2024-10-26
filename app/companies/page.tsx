@@ -2,11 +2,14 @@
 
 import { Spinner } from "@nextui-org/spinner";
 import { useConvexAuth } from "convex/react";
+import { redirect } from "next/navigation";
 
 import { Companies } from "@/components/Companies";
 
 export default function CompaniesPage() {
-  const { isLoading } = useConvexAuth();
+  const { isLoading, isAuthenticated } = useConvexAuth();
+
+  if (!isLoading && !isAuthenticated) redirect("/login");
 
   if (isLoading)
     return (

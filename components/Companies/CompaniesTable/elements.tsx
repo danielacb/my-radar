@@ -1,14 +1,6 @@
-import { Button } from "@nextui-org/button";
 import { Chip } from "@nextui-org/chip";
 import { Spinner } from "@nextui-org/spinner";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-} from "@nextui-org/dropdown";
 
-import { ExternalLinkIcon, VerticalDotsIcon } from "@/components/icons";
 import { Company } from "@/types";
 
 interface Column {
@@ -57,40 +49,6 @@ export const TableChip = ({ isFound, isLoading }: TableChipProps) =>
       {isFound ? "Found" : "Not Found"}
     </Chip>
   );
-
-interface TableDropdown extends Pick<Company, "careerPage" | "website"> {}
-
-export const TableDropdown = ({ website, careerPage }: TableDropdown) => (
-  <div className="relative flex justify-end items-center gap-2">
-    <Dropdown>
-      <DropdownTrigger>
-        <Button isIconOnly size="sm" variant="light">
-          <VerticalDotsIcon className="text-default-300" />
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu>
-        <DropdownItem
-          endContent={<ExternalLinkIcon size={18} />}
-          href={website}
-          target="_blank"
-        >
-          Visit website
-        </DropdownItem>
-        <DropdownItem
-          endContent={<ExternalLinkIcon size={18} />}
-          href={careerPage}
-          target="_blank"
-        >
-          Visit career page
-        </DropdownItem>
-        <DropdownItem>Edit</DropdownItem>
-        <DropdownItem className="text-danger" color="danger">
-          Delete
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
-  </div>
-);
 
 export const TableEmptyState = () => (
   <>

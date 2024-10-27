@@ -23,7 +23,7 @@ export const Companies = () => {
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
   const setIsScanningJobs = useMutation(api.users.setIsScanningJobs);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const { signOut } = useClerk();
 
@@ -96,6 +96,7 @@ export const Companies = () => {
       <div className="w-full flex pt-12 justify-between">
         <CompanyModal
           isOpen={isOpen}
+          onClose={onClose}
           onOpen={onOpen}
           onOpenChange={onOpenChange}
         />

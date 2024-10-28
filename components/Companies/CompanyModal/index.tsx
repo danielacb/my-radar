@@ -1,16 +1,16 @@
 import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
 import {
   Modal,
   ModalContent,
   ModalHeader,
-  ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
 import { useMutation, useQuery } from "convex/react";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { CompanyModalButton, CompanyModalFields } from "./elements";
 
 import { api } from "@/convex/_generated/api";
 import { Company } from "@/types";
@@ -23,7 +23,7 @@ const schema = z.object({
   website: z.string().url(),
 });
 
-type FormFields = z.infer<typeof schema>;
+export type CompanyFormFields = z.infer<typeof schema>;
 
 interface CompanyModalProps {
   company?: Company;
@@ -52,7 +52,7 @@ export default function CompanyModal({
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormFields>({
+  } = useForm<CompanyFormFields>({
     defaultValues,
     resolver: zodResolver(schema),
   });
@@ -63,7 +63,7 @@ export default function CompanyModal({
   const createCompany = useMutation(api.companies.create);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
 
-  const onSubmit: SubmitHandler<FormFields> = async (formData) => {
+  const onSubmit: SubmitHandler<CompanyFormFields> = async (formData) => {
     const { name, keyword, website, careerPage } = formData;
 
     let currentCompany;
@@ -108,17 +108,10 @@ export default function CompanyModal({
   return (
     <>
       {!company && (
-        <Button
-          className={
-            !companies?.length
-              ? "border-small border-white/50 shadow-lg text-white bg-gradient-to-br from-cyan-500 to-green-500 shadow-green-200/30"
-              : ""
-          }
-          variant="flat"
-          onPress={onOpen}
-        >
-          Add company
-        </Button>
+        <CompanyModalButton
+          isHighlighted={!companies?.length}
+          onOpen={onOpen}
+        />
       )}
 
       <Modal
@@ -134,53 +127,7 @@ export default function CompanyModal({
                 {company ? "Edit company" : "Add new company"}
               </ModalHeader>
               <form onSubmit={handleSubmit(onSubmit)}>
-                <ModalBody>
-                  <Input
-                    className="pt-2"
-                    errorMessage={errors?.name?.message || ""}
-                    isInvalid={!!errors.name}
-                    label="Name"
-                    labelPlacement="outside"
-                    placeholder="Company name"
-                    size="lg"
-                    variant="bordered"
-                    {...register("name")}
-                  />
-                  <Input
-                    className="pt-2"
-                    description="This will be used to check if the page hasn't changed"
-                    errorMessage={errors?.keyword?.message || ""}
-                    isInvalid={!!errors.keyword}
-                    label="Keyword"
-                    labelPlacement="outside"
-                    placeholder="Open positions"
-                    size="lg"
-                    variant="bordered"
-                    {...register("keyword")}
-                  />
-                  <Input
-                    className="pt-2"
-                    errorMessage={errors?.website?.message || ""}
-                    isInvalid={!!errors.website}
-                    label="Website"
-                    labelPlacement="outside"
-                    placeholder="Company website"
-                    size="lg"
-                    variant="bordered"
-                    {...register("website")}
-                  />
-                  <Input
-                    className="pt-2"
-                    errorMessage={errors?.careerPage?.message || ""}
-                    isInvalid={!!errors.careerPage}
-                    label="Career page"
-                    labelPlacement="outside"
-                    placeholder="Company career page"
-                    size="lg"
-                    variant="bordered"
-                    {...register("careerPage")}
-                  />
-                </ModalBody>
+                <CompanyModalFields errors={errors} register={register} />
                 <ModalFooter>
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Close

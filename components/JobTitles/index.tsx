@@ -10,11 +10,11 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 
-import { JobKeywordInput } from "./JobKeywordInput";
+import { JobTitleInput } from "./JobTitleInput";
 
 import { api } from "@/convex/_generated/api";
 
-export const JobKeywords = () => {
+export const JobTitles = () => {
   const jobTitles = useQuery(api.users.getJobTitles);
   const updateJobTitles = useMutation(api.users.updateJobTitles);
 
@@ -73,7 +73,7 @@ export const JobKeywords = () => {
                 Add job keywords
               </ModalHeader>
               <ModalBody>
-                <JobKeywordInput />
+                <JobTitleInput />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>

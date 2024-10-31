@@ -16,7 +16,7 @@ import { PasswordInput } from "./PasswordInput";
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string().min(8),
 });
 
 type FormFields = z.infer<typeof schema>;
@@ -79,7 +79,7 @@ export const SignInForm = () => {
           isInvalid={!!errors.email}
           label="Email"
           size="sm"
-          variant={!!errors.email ? "bordered" : "flat"}
+          variant={errors.email ? "bordered" : "flat"}
           {...register("email")}
         />
 
@@ -88,7 +88,12 @@ export const SignInForm = () => {
           register={register("password")}
         />
 
-        <Button color="success" isDisabled={isSubmitting} type="submit">
+        <Button
+          color="success"
+          isDisabled={isSubmitting}
+          isLoading={isSubmitting}
+          type="submit"
+        >
           Continue
         </Button>
       </form>

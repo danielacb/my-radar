@@ -89,13 +89,14 @@ export const VerifyEmailForm = ({
           errorMessage={errors?.code?.message || ""}
           isInvalid={!!errors.code}
           label="Enter your verification code"
-          variant={!!errors.code ? "bordered" : "flat"}
+          variant={errors.code ? "bordered" : "flat"}
           {...register("code")}
         />
         <Button
           className="mt-4"
           color="success"
           isDisabled={isSubmitting}
+          isLoading={isSubmitting}
           type="submit"
         >
           Verify

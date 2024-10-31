@@ -20,7 +20,7 @@ export default function CompaniesPage() {
     return (
       <div className="w-full content-center text-center">
         <h4 className="font-bold text-2xl mb-8">
-          You need to login to access this page!
+          Please log in to access and manage your companies
         </h4>
 
         <AuthForm />

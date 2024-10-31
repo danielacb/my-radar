@@ -6,9 +6,9 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { ClerkAPIError } from "@clerk/types";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
-import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { ErrorsCard } from "./ErrorsCard";
 import { PasswordInput } from "./PasswordInput";
@@ -40,7 +40,13 @@ export const SignUpForm = () => {
     formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm<FormFields>({
-    defaultValues: { email: "", password: "" },
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      passwordConfirmation: "",
+    },
     resolver: zodResolver(schema),
   });
 
@@ -96,7 +102,7 @@ export const SignUpForm = () => {
           isInvalid={!!errors.firstName}
           label="First name"
           size="sm"
-          variant={!!errors.firstName ? "bordered" : "flat"}
+          variant={errors.firstName ? "bordered" : "flat"}
           {...register("firstName")}
         />
         <Input
@@ -105,7 +111,7 @@ export const SignUpForm = () => {
           isInvalid={!!errors.lastName}
           label="Last name"
           size="sm"
-          variant={!!errors.lastName ? "bordered" : "flat"}
+          variant={errors.lastName ? "bordered" : "flat"}
           {...register("lastName")}
         />
 
@@ -115,7 +121,7 @@ export const SignUpForm = () => {
           isInvalid={!!errors.email}
           label="Email"
           size="sm"
-          variant={!!errors.email ? "bordered" : "flat"}
+          variant={errors.email ? "bordered" : "flat"}
           {...register("email")}
         />
 
@@ -129,7 +135,12 @@ export const SignUpForm = () => {
           register={register("passwordConfirmation")}
         />
 
-        <Button color="success" isDisabled={isSubmitting} type="submit">
+        <Button
+          color="success"
+          isDisabled={isSubmitting}
+          isLoading={isSubmitting}
+          type="submit"
+        >
           Continue
         </Button>
       </form>

@@ -33,10 +33,10 @@ export const JobTitles = () => {
       {jobTitles?.length === 0 ? (
         <>
           <h4 className="font-bold text-md mb-4">
-            Add job keywords to search for job openings
+            Add job titles to search for job openings
           </h4>
           <Button size="sm" onPress={onOpen}>
-            Add job keywords
+            Add job titles
           </Button>
         </>
       ) : (
@@ -70,7 +70,7 @@ export const JobTitles = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-2xl">
-                Add job keywords
+                Add job titles
               </ModalHeader>
               <ModalBody>
                 <JobTitleInput />

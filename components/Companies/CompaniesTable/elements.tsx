@@ -21,7 +21,7 @@ export const columns: Column[] = [
   },
   {
     key: "isJobTitleFound",
-    label: "Job Keyword",
+    label: "Job Title",
   },
   {
     key: "_id",

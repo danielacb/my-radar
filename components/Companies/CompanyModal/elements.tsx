@@ -19,7 +19,12 @@ export const CompanyModalButton = ({
     : "";
 
   return (
-    <Button className={ButtonStyle} variant="flat" onPress={onOpen}>
+    <Button
+      aria-label="Add company"
+      className={ButtonStyle}
+      variant="flat"
+      onPress={onOpen}
+    >
       Add company
     </Button>
   );
@@ -44,7 +49,7 @@ export const CompanyModalFields = ({
         labelPlacement="outside"
         placeholder="Company name"
         size="lg"
-        variant={!!errors.name ? "bordered" : "flat"}
+        variant={errors.name ? "bordered" : "flat"}
         {...register("name")}
       />
       <Input
@@ -56,7 +61,7 @@ export const CompanyModalFields = ({
         labelPlacement="outside"
         placeholder="Open positions"
         size="lg"
-        variant={!!errors.keyword ? "bordered" : "flat"}
+        variant={errors.keyword ? "bordered" : "flat"}
         {...register("keyword")}
       />
       <Input
@@ -67,7 +72,7 @@ export const CompanyModalFields = ({
         labelPlacement="outside"
         placeholder="Company website"
         size="lg"
-        variant={!!errors.website ? "bordered" : "flat"}
+        variant={errors.website ? "bordered" : "flat"}
         {...register("website")}
       />
       <Input
@@ -78,7 +83,7 @@ export const CompanyModalFields = ({
         labelPlacement="outside"
         placeholder="Company career page"
         size="lg"
-        variant={!!errors.careerPage ? "bordered" : "flat"}
+        variant={errors.careerPage ? "bordered" : "flat"}
         {...register("careerPage")}
       />
     </ModalBody>

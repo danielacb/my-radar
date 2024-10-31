@@ -11,7 +11,9 @@ import { api } from "@/convex/_generated/api";
 const schema = z.object({
   jobTitle: z
     .string()
-    .min(1, { message: "Job title must contain at least 1 character" }),
+    .trim()
+    .min(1, { message: "Job title must contain at least 1 character" })
+    .max(50),
 });
 
 type FormFields = z.infer<typeof schema>;
@@ -39,21 +41,28 @@ export const JobTitleInput = () => {
   };
 
   const handleAdd: SubmitHandler<FormFields> = async (formData) => {
-    const { jobTitle } = formData;
+    const jobTitle = formData.jobTitle.trim();
 
-    if (jobTitles?.includes(jobTitle))
-      return setError("jobTitle", {
-        message: "Job title already exists. Please add a different one.",
+    try {
+      if (jobTitles?.includes(jobTitle))
+        return setError("jobTitle", {
+          message: "Job title already exists. Please add a different one.",
+        });
+
+      const newJobTitles = new Set(jobTitles || []);
+
+      newJobTitles.add(jobTitle);
+
+      await updateJobTitles({ jobTitles: Array.from(newJobTitles) });
+
+      setFocus("jobTitle");
+      reset();
+    } catch (error) {
+      console.error("Failed to add job title:", error);
+      setError("jobTitle", {
+        message: "Failed to add job title. Please try again.",
       });
-
-    const newJobTitles = new Set(jobTitles || []);
-
-    newJobTitles.add(jobTitle);
-
-    await updateJobTitles({ jobTitles: Array.from(newJobTitles) });
-
-    setFocus("jobTitle");
-    reset();
+    }
   };
 
   return (
@@ -83,14 +92,14 @@ export const JobTitleInput = () => {
             placeholder="Javascript"
             size="md"
             type="text"
-            variant={!!errors.jobTitle ? "bordered" : "flat"}
+            variant={errors.jobTitle ? "bordered" : "flat"}
             {...register("jobTitle")}
-            autoComplete=""
           />
         </div>
         <Button
           color="primary"
           isDisabled={isSubmitting}
+          isLoading={isSubmitting}
           size="md"
           type="submit"
         >

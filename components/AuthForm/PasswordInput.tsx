@@ -39,7 +39,7 @@ export const PasswordInput = ({
       label={label}
       size="sm"
       type={isPasswordVisible ? "text" : "password"}
-      variant={!!error ? "bordered" : "flat"}
+      variant={error ? "bordered" : "flat"}
       {...register}
     />
   );

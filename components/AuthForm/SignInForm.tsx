@@ -74,6 +74,7 @@ export const SignInForm = () => {
     <>
       <form className="mt-4 text-right" onSubmit={handleSubmit(onSubmit)}>
         <Input
+          autoComplete="email"
           className="mb-4"
           errorMessage={errors?.email?.message || ""}
           isInvalid={!!errors.email}
@@ -84,6 +85,7 @@ export const SignInForm = () => {
         />
 
         <PasswordInput
+          autoComplete="current-password"
           error={errors.password}
           register={register("password")}
         />

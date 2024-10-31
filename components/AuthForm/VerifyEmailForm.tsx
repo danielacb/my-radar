@@ -86,6 +86,7 @@ export const VerifyEmailForm = ({
       <p className="text-center text-medium mb-4">We sent a code to {email}</p>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
+          autoComplete="one-time-code"
           errorMessage={errors?.code?.message || ""}
           isInvalid={!!errors.code}
           label="Enter your verification code"

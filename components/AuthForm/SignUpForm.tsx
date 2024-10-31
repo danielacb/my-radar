@@ -97,6 +97,7 @@ export const SignUpForm = () => {
     <>
       <form className="mt-4 text-right" onSubmit={handleSubmit(onSubmit)}>
         <Input
+          autoComplete="name"
           className="mb-4"
           errorMessage={errors?.firstName?.message || ""}
           isInvalid={!!errors.firstName}
@@ -106,6 +107,7 @@ export const SignUpForm = () => {
           {...register("firstName")}
         />
         <Input
+          autoComplete="family-name"
           className="mb-4"
           errorMessage={errors?.lastName?.message || ""}
           isInvalid={!!errors.lastName}
@@ -116,6 +118,7 @@ export const SignUpForm = () => {
         />
 
         <Input
+          autoComplete="email"
           className="mb-4"
           errorMessage={errors?.email?.message || ""}
           isInvalid={!!errors.email}
@@ -126,10 +129,13 @@ export const SignUpForm = () => {
         />
 
         <PasswordInput
+          autoComplete="new-password"
           error={errors.password}
+          label="Password"
           register={register("password")}
         />
         <PasswordInput
+          autoComplete="new-password"
           error={errors.passwordConfirmation}
           label="Confirm password"
           register={register("passwordConfirmation")}

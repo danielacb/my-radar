@@ -1,19 +1,20 @@
-import { Input } from "@nextui-org/input";
+import { Input, InputProps } from "@nextui-org/input";
 import { useState } from "react";
 import { FieldError, UseFormRegisterReturn } from "react-hook-form";
 
 import { EyeFilledIcon, EyeSlashFilledIcon } from "../icons";
 
-interface PasswordInputProps {
+type PasswordInputProps = {
   error?: FieldError;
   register: UseFormRegisterReturn;
   label?: string;
-}
+} & InputProps;
 
 export const PasswordInput = ({
   error,
   register,
   label = "Password",
+  ...props
 }: PasswordInputProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -41,6 +42,7 @@ export const PasswordInput = ({
       type={isPasswordVisible ? "text" : "password"}
       variant={error ? "bordered" : "flat"}
       {...register}
+      {...props}
     />
   );
 };

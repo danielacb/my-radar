@@ -11,7 +11,7 @@ import CompanyModal from "./CompanyModal";
 
 import { api } from "@/convex/_generated/api";
 import SettingsModal from "@/components/SettingsModal";
-import { JobKeywords } from "@/components/JobKeywords";
+import { JobTitles } from "@/components/JobTitles";
 import { scanCompany } from "@/app/helpers";
 
 export const Companies = () => {
@@ -23,7 +23,7 @@ export const Companies = () => {
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
   const setIsScanningJobs = useMutation(api.users.setIsScanningJobs);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const { signOut } = useClerk();
 
@@ -32,7 +32,7 @@ export const Companies = () => {
   const buttonTitle = isButtonDisabled
     ? isScanningJobs
       ? "Scanning in progress..."
-      : "Add job keywords to search for job openings"
+      : "Add job titles to search for job openings"
     : "Scan all companies for job listings";
   const buttonClasses = `border-small border-white/50 shadow-lg text-white
       ${
@@ -91,11 +91,12 @@ export const Companies = () => {
       >
         {`${isScanningJobs ? "Scanning" : "Scan"} for Jobs`}
       </Button>
-      <JobKeywords />
+      <JobTitles />
 
       <div className="w-full flex pt-12 justify-between">
         <CompanyModal
           isOpen={isOpen}
+          onClose={onClose}
           onOpen={onOpen}
           onOpenChange={onOpenChange}
         />

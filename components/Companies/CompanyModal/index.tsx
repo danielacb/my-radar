@@ -1,23 +1,35 @@
 import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
 import {
   Modal,
   ModalContent,
   ModalHeader,
-  ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
 import { useMutation, useQuery } from "convex/react";
-import { FormEvent, useEffect, useState } from "react";
+import { z } from "zod";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { CompanyModalButton, CompanyModalFields } from "./elements";
 
 import { api } from "@/convex/_generated/api";
 import { Company } from "@/types";
 import { scanCompany } from "@/app/helpers";
 
+const schema = z.object({
+  name: z.string().min(1, { message: "Company name is required" }),
+  careerPage: z.string().url(),
+  keyword: z.string().min(1, { message: "Career page keyword is required" }),
+  website: z.string().url(),
+});
+
+export type CompanyFormFields = z.infer<typeof schema>;
+
 interface CompanyModalProps {
   company?: Company;
   isOpen: boolean;
   onOpen: () => void;
+  onClose: () => void;
   onOpenChange: () => void;
 }
 
@@ -25,17 +37,25 @@ export default function CompanyModal({
   company,
   isOpen,
   onOpen,
+  onClose,
   onOpenChange,
 }: CompanyModalProps) {
-  const initialFormValues = {
+  const defaultValues = {
     name: company?.name || "",
     careerPage: company?.careerPage || "",
     keyword: company?.keyword || "",
     website: company?.website || "",
   };
 
-  const [formData, setFormData] = useState(initialFormValues);
-  const { name, keyword, website, careerPage } = formData;
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<CompanyFormFields>({
+    defaultValues,
+    resolver: zodResolver(schema),
+  });
 
   const jobTitles = useQuery(api.users.getJobTitles) || [];
   const companies = useQuery(api.companies.get);
@@ -43,28 +63,21 @@ export default function CompanyModal({
   const createCompany = useMutation(api.companies.create);
   const setIsScanningCompany = useMutation(api.companies.setIsScanningCompany);
 
-  useEffect(() => {
-    setFormData(initialFormValues);
-  }, [isOpen]);
-
-  const handleValueChange = (
-    value: string,
-    input: "name" | "careerPage" | "keyword" | "website",
-  ) => {
-    setFormData({
-      ...formData,
-      [input]: value,
-    });
-  };
-
-  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<CompanyFormFields> = async (formData) => {
+    const { name, keyword, website, careerPage } = formData;
 
     let currentCompany;
 
     if (company) {
       currentCompany = { ...company, ...formData };
       await updateCompany({ company: currentCompany });
+
+      reset({
+        name: currentCompany?.name || "",
+        careerPage: currentCompany?.careerPage || "",
+        keyword: currentCompany?.keyword || "",
+        website: currentCompany?.website || "",
+      });
     } else {
       currentCompany = await createCompany({
         name,
@@ -72,11 +85,15 @@ export default function CompanyModal({
         careerPage,
         website,
       });
+
+      reset(defaultValues);
     }
 
     const toastSuccessMessage = company
       ? `Information for ${formData.name} updated successfully!`
       : `Finished scanning for jobs on ${currentCompany.name}`;
+
+    onClose();
 
     await scanCompany({
       company: currentCompany,
@@ -91,17 +108,10 @@ export default function CompanyModal({
   return (
     <>
       {!company && (
-        <Button
-          className={
-            !companies?.length
-              ? "border-small border-white/50 shadow-lg text-white bg-gradient-to-br from-cyan-500 to-green-500 shadow-green-200/30"
-              : ""
-          }
-          variant="flat"
-          onPress={onOpen}
-        >
-          Add company
-        </Button>
+        <CompanyModalButton
+          isHighlighted={!companies?.length}
+          onOpen={onOpen}
+        />
       )}
 
       <Modal
@@ -111,64 +121,23 @@ export default function CompanyModal({
         onOpenChange={onOpenChange}
       >
         <ModalContent>
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-2xl">
                 {company ? "Edit company" : "Add new company"}
               </ModalHeader>
-              <form onSubmit={handleFormSubmit}>
-                <ModalBody>
-                  <Input
-                    required
-                    className="pt-2"
-                    label="Name"
-                    labelPlacement="outside"
-                    placeholder="Company name"
-                    size="lg"
-                    value={name}
-                    variant="bordered"
-                    onValueChange={(e) => handleValueChange(e, "name")}
-                  />
-                  <Input
-                    required
-                    className="pt-2"
-                    description="This will be used to check if the page hasn't changed"
-                    label="Keyword"
-                    labelPlacement="outside"
-                    placeholder="Open positions"
-                    size="lg"
-                    value={keyword}
-                    variant="bordered"
-                    onValueChange={(e) => handleValueChange(e, "keyword")}
-                  />
-                  <Input
-                    required
-                    className="pt-2"
-                    label="Website"
-                    labelPlacement="outside"
-                    placeholder="Company website"
-                    size="lg"
-                    value={website}
-                    variant="bordered"
-                    onValueChange={(e) => handleValueChange(e, "website")}
-                  />
-                  <Input
-                    required
-                    className="pt-2"
-                    label="Career page"
-                    labelPlacement="outside"
-                    placeholder="Company career page"
-                    size="lg"
-                    value={careerPage}
-                    variant="bordered"
-                    onValueChange={(e) => handleValueChange(e, "careerPage")}
-                  />
-                </ModalBody>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <CompanyModalFields errors={errors} register={register} />
                 <ModalFooter>
                   <Button color="danger" variant="flat" onPress={onClose}>
                     Close
                   </Button>
-                  <Button color="success" type="submit" onPress={onClose}>
+                  <Button
+                    color="success"
+                    isDisabled={isSubmitting}
+                    isLoading={isSubmitting}
+                    type="submit"
+                  >
                     {company ? "Save" : "Add"}
                   </Button>
                 </ModalFooter>

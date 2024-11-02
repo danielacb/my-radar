@@ -10,7 +10,7 @@ import {
 import { Divider } from "@nextui-org/divider";
 
 import { ThemeSwitch } from "../theme-switch";
-import { JobKeywordInput } from "../JobKeywords/JobKeywordInput";
+import { JobTitleInput } from "../JobTitles/JobTitleInput";
 
 export default function SettingsModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -35,7 +35,7 @@ export default function SettingsModal() {
               </ModalHeader>
               <ModalBody className="py-6">
                 <h4 className="font-bold text-large">Job Title keywords</h4>
-                <JobKeywordInput />
+                <JobTitleInput />
 
                 <Divider className="my-8" />
 

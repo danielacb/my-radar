@@ -18,7 +18,7 @@ export const TableDropdown = ({ company }: { company: Company }) => {
   const { _id, careerPage, website } = company;
   const deleteCompany = useMutation(api.companies.deleteCompany);
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   return (
     <div className="relative flex justify-end items-center gap-2">
@@ -63,6 +63,7 @@ export const TableDropdown = ({ company }: { company: Company }) => {
       <CompanyModal
         company={company}
         isOpen={isOpen}
+        onClose={onClose}
         onOpen={onOpen}
         onOpenChange={onOpenChange}
       />

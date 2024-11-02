@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@nextui-org/button";
+import * as Sentry from "@sentry/nextjs";
 import { Link } from "@nextui-org/link";
 import { useEffect } from "react";
 
@@ -12,9 +13,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    /* eslint-disable no-console */
-    console.error(error);
+    Sentry.captureException(error);
   }, [error]);
 
   return (

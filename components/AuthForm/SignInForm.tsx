@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
@@ -60,13 +61,23 @@ export const SignInForm = () => {
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
-        console.error(JSON.stringify(signInAttempt, null, 2));
+        Sentry.captureException(JSON.stringify(signInAttempt, null, 2));
       }
     } catch (err) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      if (isClerkAPIResponseError(err)) setClerkErrors(err.errors);
-      console.error(JSON.stringify(err, null, 2));
+      if (isClerkAPIResponseError(err)) {
+        setClerkErrors(err.errors);
+        Sentry.withScope((scope) => {
+          scope.setTags({
+            clerkError: err.clerkError,
+            status: err.status,
+          });
+          Sentry.captureException(JSON.stringify(err, null, 2));
+        });
+      }
+
+      Sentry.captureException(JSON.stringify(err, null, 2));
     }
   };
 

@@ -1,4 +1,5 @@
 import { Button } from "@nextui-org/button";
+import { captureException } from "@sentry/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -58,7 +59,7 @@ export const JobTitleInput = () => {
       setFocus("jobTitle");
       reset();
     } catch (error) {
-      console.error("Failed to add job title:", error);
+      captureException(error);
       setError("jobTitle", {
         message: "Failed to add job title. Please try again.",
       });

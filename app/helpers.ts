@@ -1,4 +1,5 @@
 import toast from "react-hot-toast";
+import { captureException } from "@sentry/nextjs";
 
 import { Id } from "@/convex/_generated/dataModel";
 import { Company } from "@/types";
@@ -54,49 +55,9 @@ export const scanCompany = async ({
 
     if (toastSuccessMessage) toast.success(toastSuccessMessage);
   } catch (error) {
-    console.error("Error in scanCompany:", error);
+    captureException(error);
     toast.error(toastErrorMessage);
   } finally {
     setIsScanningCompany({ id: company._id, state: false });
   }
-};
-
-export interface ValidationResult {
-  isValid: boolean;
-  message?: string;
-}
-
-export const validateEmail = (
-  email: string | undefined | null,
-): ValidationResult => {
-  const trimmedEmail = email?.trim() || "";
-
-  if (trimmedEmail === "") {
-    return {
-      isValid: false,
-      message: "Please enter your email address",
-    };
-  }
-
-  return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(trimmedEmail)
-    ? { isValid: true }
-    : { isValid: false, message: "Please enter a valid email address" };
-};
-
-export const validatePassword = (password: string): ValidationResult => {
-  if (password === "") {
-    return {
-      isValid: false,
-      message: "Password is required",
-    };
-  }
-
-  if (password.length < 8) {
-    return {
-      isValid: false,
-      message: "Password must be at least 8 characters long",
-    };
-  }
-
-  return { isValid: true };
 };

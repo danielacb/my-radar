@@ -61,7 +61,13 @@ export const SignInForm = () => {
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
-        Sentry.captureException(JSON.stringify(signInAttempt, null, 2));
+        Sentry.withScope((scope) => {
+          scope.setContext("sign in", { status: signInAttempt.status });
+          scope.setTag("action", "sign in");
+          scope.captureException(
+            JSON.stringify(signInAttempt.identifier, null, 2),
+          );
+        });
       }
     } catch (err) {
       // See https://clerk.com/docs/custom-flows/error-handling
@@ -69,11 +75,11 @@ export const SignInForm = () => {
       if (isClerkAPIResponseError(err)) {
         setClerkErrors(err.errors);
         Sentry.withScope((scope) => {
-          scope.setTags({
-            clerkError: err.clerkError,
-            status: err.status,
+          scope.setContext("clerkError", {
+            code: err.errors,
+            message: err.errors,
+            longMessage: err.errors,
           });
-          Sentry.captureException(JSON.stringify(err, null, 2));
         });
       }
 

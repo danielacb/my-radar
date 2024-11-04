@@ -10,11 +10,13 @@ module.exports = withSentryConfig(module.exports, {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
-  org: "dcb-6g",
-  project: "my-jobs-radar",
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+
+  environment: process.env.NODE_ENV,
 
   // Only print logs for uploading source maps in CI
-  silent: !process.env.CI,
+  silent: process.env.NODE_ENV === "production" && !process.env.CI,
 
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
@@ -44,4 +46,6 @@ module.exports = withSentryConfig(module.exports, {
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
+
+  debug: process.env.NODE_ENV === "development",
 });

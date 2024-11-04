@@ -29,7 +29,7 @@ const scanWebsiteForKeywords = async (
   } catch (error: unknown) {
     Sentry.withScope((scope) => {
       scope.setContext("scanWebsiteForKeywords", {
-        url,
+        url: new URL(url).origin,
         keywords,
       });
       Sentry.captureException(error);
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     Sentry.withScope((scope) => {
       scope.setContext("scan jobs request", {
-        url,
+        url: new URL(url).origin,
         keywords,
       });
       Sentry.captureException(error);

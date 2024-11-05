@@ -1,4 +1,5 @@
 import { Button } from "@nextui-org/button";
+import * as Sentry from "@sentry/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,7 +38,20 @@ export const JobTitleInput = () => {
   const handleDelete = async (jobTitle: string) => {
     const newJobTitles = jobTitles?.filter((title) => title !== jobTitle);
 
-    await updateJobTitles({ jobTitles: newJobTitles || [] });
+    try {
+      await updateJobTitles({ jobTitles: newJobTitles || [] });
+    } catch (error) {
+      Sentry.withScope((scope) => {
+        scope.setTag("feature", "job management");
+        scope.setContext("Delete job title", {
+          jobTitle,
+        });
+        scope.captureException(error);
+      });
+      setError("jobTitle", {
+        message: "Failed to delete job title. Please try again.",
+      });
+    }
   };
 
   const handleAdd: SubmitHandler<FormFields> = async (formData) => {
@@ -58,7 +72,13 @@ export const JobTitleInput = () => {
       setFocus("jobTitle");
       reset();
     } catch (error) {
-      console.error("Failed to add job title:", error);
+      Sentry.withScope((scope) => {
+        scope.setTag("feature", "job management");
+        scope.setContext("Add job title", {
+          jobTitle,
+        });
+        scope.captureException(error);
+      });
       setError("jobTitle", {
         message: "Failed to add job title. Please try again.",
       });

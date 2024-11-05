@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import * as Sentry from "@sentry/nextjs";
 import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
 import { useSignUp } from "@clerk/nextjs";
@@ -68,13 +69,24 @@ export const VerifyEmailForm = ({
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
-        console.error(JSON.stringify(signUpAttempt, null, 2));
+        Sentry.withScope((scope) => {
+          scope.setContext("verify email", {
+            status: signUpAttempt.status,
+          });
+          scope.setTag("action", "email verification");
+          scope.captureException(
+            JSON.stringify("Sign in attempt failed", null, 2),
+          );
+        });
       }
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       if (isClerkAPIResponseError(err)) setClerkErrors(err.errors);
-      console.error("Error:", JSON.stringify(err, null, 2));
+      Sentry.withScope((scope) => {
+        scope.setTag("sign up", "verification");
+        scope.captureException(JSON.stringify(err, null, 2));
+      });
     }
   };
 

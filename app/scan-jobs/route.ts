@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import puppeteer from "puppeteer";
 
 const scanWebsiteForKeywords = async (
@@ -21,22 +22,18 @@ const scanWebsiteForKeywords = async (
 
     // Check if any keyword is present
     for (const keyword of keywords) {
-      if (pageContent?.includes(keyword)) {
-        console.log(`Keyword "${keyword}" found on the page.`);
-
-        return true;
-      } else {
-        console.log(`Keyword "${keyword}" NOT found on the page.`);
-      }
+      if (pageContent?.includes(keyword)) return true;
     }
 
     return false;
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(`Error scanning website: ${error.message}`);
-    } else {
-      console.error("Unknown error occurred.");
-    }
+    Sentry.withScope((scope) => {
+      scope.setContext("scanWebsiteForKeywords", {
+        url: new URL(url).origin,
+        keywords,
+      });
+      Sentry.captureException(error);
+    });
 
     return false;
   } finally {
@@ -45,9 +42,9 @@ const scanWebsiteForKeywords = async (
 };
 
 export async function POST(req: NextRequest) {
-  try {
-    const { url, keywords } = await req.json();
+  const { url, keywords } = await req.json();
 
+  try {
     if (
       typeof url !== "string" ||
       !Array.isArray(keywords) ||
@@ -66,9 +63,15 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(result, { status: 200 });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error(`Error: ${error.message}`);
+    Sentry.withScope((scope) => {
+      scope.setContext("scan jobs request", {
+        url: new URL(url).origin,
+        keywords,
+      });
+      Sentry.captureException(error);
+    });
 
+    if (error instanceof Error) {
       return NextResponse.json(
         { message: "Internal server error.", error: error.message },
         { status: 500 },

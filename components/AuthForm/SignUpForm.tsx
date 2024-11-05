@@ -5,6 +5,7 @@ import { useSignUp } from "@clerk/nextjs";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { ClerkAPIError } from "@clerk/types";
+import * as Sentry from "@sentry/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -77,8 +78,18 @@ export const SignUpForm = () => {
     } catch (err) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      if (isClerkAPIResponseError(err)) setClerkErrors(err.errors);
-      console.error(JSON.stringify(err, null, 2));
+      if (isClerkAPIResponseError(err)) {
+        setClerkErrors(err.errors);
+        Sentry.withScope((scope) => {
+          scope.setContext("clerkError", {
+            code: err.errors,
+            message: err.errors,
+            longMessage: err.errors,
+          });
+        });
+      }
+
+      Sentry.captureException(JSON.stringify(err, null, 2));
     }
   };
 

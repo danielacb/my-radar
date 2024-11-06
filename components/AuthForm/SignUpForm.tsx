@@ -153,6 +153,8 @@ export const SignUpForm = () => {
         />
 
         <Button
+          fullWidth
+          className="mt-4"
           color="success"
           isDisabled={isSubmitting}
           isLoading={isSubmitting}

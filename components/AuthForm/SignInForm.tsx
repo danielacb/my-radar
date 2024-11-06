@@ -108,6 +108,16 @@ export const SignInForm = () => {
         />
 
         <Button
+          className="mb-6"
+          color="success"
+          variant="light"
+          onClick={() => router.push("/forgot-password")}
+        >
+          Forgot password?
+        </Button>
+
+        <Button
+          fullWidth
           color="success"
           isDisabled={isSubmitting}
           isLoading={isSubmitting}

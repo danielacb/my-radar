@@ -11,7 +11,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { ErrorsCard } from "./ErrorsCard";
+import ErrorsCard from "./ErrorsCard";
 import { PasswordInput } from "./PasswordInput";
 import { VerifyEmailForm } from "./VerifyEmailForm";
 

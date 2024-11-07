@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@nextui-org/input";
 import { z } from "zod";
 
-import { ErrorsCard } from "./ErrorsCard";
+import ErrorsCard from "./ErrorsCard";
 import { PasswordInput } from "./PasswordInput";
 
 const schema = z.object({

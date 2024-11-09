@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/button";
 import { z } from "zod";
 
-import { ErrorsCard } from "./ErrorsCard";
+import ErrorsCard from "./ErrorsCard";
 
 import { api } from "@/convex/_generated/api";
 

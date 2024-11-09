@@ -5,7 +5,7 @@ export const ErrorsCard = ({ errors = [] }: { errors?: ClerkAPIError[] }) => {
   if (errors.length === 0) return null;
 
   return (
-    <Card className="rounded-md p-4 text-left mt-6 shadow-sm border-danger border-medium">
+    <Card className="rounded-md w-full p-4 text-left mt-6 shadow-sm border-danger border-medium">
       {errors.map((error) => (
         <p
           key={`${error.code}-${error.message}`}
@@ -18,3 +18,5 @@ export const ErrorsCard = ({ errors = [] }: { errors?: ClerkAPIError[] }) => {
     </Card>
   );
 };
+
+export default ErrorsCard;

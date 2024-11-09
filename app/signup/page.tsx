@@ -1,17 +1,18 @@
 "use client";
 
-import { useConvexAuth } from "convex/react";
+import { useAuth } from "@clerk/nextjs";
 import { Spinner } from "@nextui-org/spinner";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { AuthForm } from "@/components/AuthForm";
 
-export default function SignUp() {
-  const { isAuthenticated, isLoading } = useConvexAuth();
+export default function Login() {
+  const { isSignedIn, isLoaded } = useAuth();
+  const router = useRouter();
 
-  if (isAuthenticated) redirect("/companies");
+  if (isSignedIn) router.push("/companies");
 
-  if (isLoading)
+  if (!isLoaded)
     return (
       <div className="w-full h-full flex justify-center">
         <Spinner color="success" size="lg" />

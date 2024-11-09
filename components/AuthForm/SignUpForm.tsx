@@ -11,7 +11,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { ErrorsCard } from "./ErrorsCard";
+import ErrorsCard from "./ErrorsCard";
 import { PasswordInput } from "./PasswordInput";
 import { VerifyEmailForm } from "./VerifyEmailForm";
 
@@ -153,6 +153,8 @@ export const SignUpForm = () => {
         />
 
         <Button
+          fullWidth
+          className="mt-4"
           color="success"
           isDisabled={isSubmitting}
           isLoading={isSubmitting}

@@ -74,12 +74,10 @@ export const SignInForm = () => {
       // for more info on error handling
       if (isClerkAPIResponseError(err)) {
         setClerkErrors(err.errors);
+        const { code, message, longMessage } = err.errors[0];
+
         Sentry.withScope((scope) => {
-          scope.setContext("clerkError", {
-            code: err.errors,
-            message: err.errors,
-            longMessage: err.errors,
-          });
+          scope.setContext("clerkError", { code, message, longMessage });
         });
       }
 

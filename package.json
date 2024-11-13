@@ -39,7 +39,7 @@
     "convex": "^1.15.0",
     "framer-motion": "~11.1.1",
     "intl-messageformat": "^10.5.0",
-    "next": "14.2.4",
+    "next": "^14.2.17",
     "next-themes": "^0.2.1",
     "puppeteer": "^23.3.0",
     "react": "18.3.1",

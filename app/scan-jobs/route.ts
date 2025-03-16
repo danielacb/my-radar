@@ -8,9 +8,17 @@ const scanWebsiteForKeywords = async (
 ): Promise<boolean> => {
   if (!Array.isArray(keywords)) return false;
 
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
+  let browser;
 
+  if (process.env.NODE_ENV === "development") {
+    browser = await puppeteer.launch();
+  } else {
+    browser = await puppeteer.connect({
+      browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_TOKEN}`,
+    });
+  }
+
+  const page = await browser.newPage();
   const SPApages = ["ashbyhq"];
   const waitOption = SPApages.some((page) => url.includes(page))
     ? "networkidle0"
